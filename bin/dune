@@ -1,0 +1,8 @@
+(executable
+ (name main)
+ (libraries
+  ounit2
+  graphics
+  camlimages.png
+  camlimages.graphics
+  camlimages.jpeg))
