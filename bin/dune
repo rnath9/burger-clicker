@@ -1,6 +1,7 @@
 (executable
  (name main)
  (libraries
+  bogue
   ounit2
   graphics
   camlimages.png
