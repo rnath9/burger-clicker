@@ -6,12 +6,12 @@ let main () =
   G.set_window_title "Burger Clicker";
   G.set_color G.black;
   G.fill_rect 0 0 (G.size_x a) (G.size_y a);
-  let background = Png.load_as_rgb24 "Burger_Background.png" [] in
+  let background = Png.load_as_rgb24 "BurgerBackground.png" [] in
   let display_background = Graphic_image.of_image background in
-  let img = Png.load_as_rgb24 "Colored_Whopper.png" [] in
+  let img = Png.load_as_rgb24 "ColoredWhopperFixed.png" [] in
   let display_image = Graphic_image.of_image img in
   G.draw_image display_background 0 0;
-  G.draw_image display_image ((G.size_x a / 2) - 190) ((G.size_y a / 2) - 64)
+  G.draw_image display_image ((G.size_x a / 2) - 182) ((G.size_y a / 2) - 48)
 
 let rec interactive () =
   let event = G.wait_next_event [ G.Key_pressed; G.Button_down ] in
