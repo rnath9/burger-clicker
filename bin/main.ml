@@ -1,8 +1,7 @@
 module G = Graphics
+module H = Help
 
-type information = { mutable burgers : int }
-
-let stats = { burgers = 0 }
+let stats = H.init
 
 let background a =
   G.set_window_title "Burger Clicker";
@@ -11,7 +10,7 @@ let background a =
   let img = Png.load_as_rgb24 "ColoredWhopperFixed.png" [] in
   let display_image = Graphic_image.of_image img in
   G.draw_image display_background 0 0;
-  G.draw_image display_image ((G.size_x a / 2) - 182) ((G.size_y a / 2) - 48);
+  G.draw_image display_image ((G.size_x a / 2) - 182) 352;
   G.set_color (G.rgb 51 44 80)
 
 let main () =
@@ -24,7 +23,7 @@ let rec interactive a () =
     if
       event.mouse_x > 400 && event.mouse_x < 540 && event.mouse_y > 350
       && event.mouse_y < 450
-    then stats.burgers <- stats.burgers + 1;
+    then H.increment_burger stats;
     background a;
     G.moveto 420 685;
     Graphics.set_font "-*-fixed-medium-r-semicondensed--75-*-*-*-*-*-iso8859-1";

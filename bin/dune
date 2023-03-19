@@ -1,6 +1,7 @@
 (executable
  (name main)
  (libraries
+  help
   bogue
   ounit2
   graphics
