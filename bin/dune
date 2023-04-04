@@ -2,9 +2,9 @@
  (name main)
  (libraries
   help
-  bogue
   ounit2
   graphics
+  raylib
   camlimages.png
   camlimages.graphics
   camlimages.jpeg))
