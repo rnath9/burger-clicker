@@ -4,7 +4,7 @@ type information = {
   mutable click_power : int;
 }
 
-let burger_init = { burgers = 10000000000000; bps = 0; click_power = 1 }
+let burger_init = { burgers = 1000000000000000; bps = 0; click_power = 1 }
 let increment_burger_click t = t.burgers <- t.burgers + t.click_power
 let decrease_burger_spend t price = t.burgers <- t.burgers - price
 
@@ -102,3 +102,10 @@ let increment_item p item (pr : price_list) =
         (pr.burger_wormhole_price <- pr.burger_wormhole_price |> increase_price;
          p.burger_wormhole + 1)
   | _ -> failwith "Unknown item attempt"
+
+let round3 n = Float.(n *. 100.0 |> round |> fun x -> x /. 100.0)
+
+let rec truncate num suffix =
+  match round3 num with
+  | n when n < 1000. -> string_of_float n ^ List.hd suffix
+  | n -> truncate (n /. 1000.) (List.tl suffix)
