@@ -10,36 +10,71 @@ let state = ref 0
 let time = ref 0
 
 let setup () =
-  R.init_window 1200 800 "Burger Clicker";
+  R.init_window 1120 700 "Burger Clicker";
   R.set_target_fps 60;
-  let bg_image = R.load_image "BurgerBackground.png" in
+  let bg_image = R.load_image "RescaledBurgerBackground.png" in
   let bg_texture = R.load_texture_from_image bg_image in
   R.unload_image bg_image;
   let burger_image = R.load_image "Transparent_Burger.png" in
   let burger_texture = R.load_texture_from_image burger_image in
   R.unload_image burger_image;
-  (bg_texture, burger_texture)
+  let buy_image = R.load_image "Buy.png" in
+  let buy_texture = R.load_texture_from_image buy_image in
+  R.unload_image buy_image;
+  (bg_texture, burger_texture, buy_texture)
 
-let burger_hitbox = R.Rectangle.create 425. 350. 100. 100.
-let sauce_hitbox = R.Rectangle.create 940. 130. 114. 149.
-let secret_sauce_hitbox = R.Rectangle.create 1060. 130. 134. 149.
-let spatula_hitbox = R.Rectangle.create 940. 284. 254. 75.
-let grilling_dad_hitbox = R.Rectangle.create 940. 365. 254. 74.
-let burger_tree_hitbox = R.Rectangle.create 940. 445. 254. 74.
-let food_truck_hitbox = R.Rectangle.create 940. 525. 254. 74.
-let burger_lab_hitbox = R.Rectangle.create 940. 605. 254. 74.
-let burger_wormhole_hitbox = R.Rectangle.create 940. 685. 254. 109.
+let font_color = R.Color.create 50 42 79 255
+let price_color = R.Color.create 226 243 228 255
+let burger_hitbox = R.Rectangle.create 375. 293. 110. 85.
+let sauce_hitbox = R.Rectangle.create 870. 115. 84. 30.
+let secret_sauce_hitbox = R.Rectangle.create 1005. 222. 84. 30.
+let spatula_hitbox = R.Rectangle.create 1020. 299. 84. 30.
+let grilling_dad_hitbox = R.Rectangle.create 1020. 369. 84. 30.
+let burger_tree_hitbox = R.Rectangle.create 1020. 439. 84. 30.
+let food_truck_hitbox = R.Rectangle.create 1020. 509. 84. 30.
+let burger_lab_hitbox = R.Rectangle.create 1020. 579. 84. 30.
+let burger_wormhole_hitbox = R.Rectangle.create 1020. 649. 254. 109.
+
+let shop (price : int) (item : string) mouse hitbox =
+  if R.check_collision_point_rec mouse hitbox then
+    if R.is_mouse_button_down R.MouseButton.Left then
+      if !state = 0 && burger_stats.burgers > price then (
+        state := 1;
+        H.decrease_burger_spend burger_stats price;
+        H.increment_item item_stats item price_list;
+        H.increment_bps burger_stats item)
+
+let perm_upgrade (price : int) (item : string) mouse hitbox purchased =
+  if R.check_collision_point_rec mouse hitbox then
+    if R.is_mouse_button_down R.MouseButton.Left then
+      if
+        !state = 0 && burger_stats.burgers > price_list.sauce_price && purchased
+      then (
+        state := 1;
+        H.decrease_burger_spend burger_stats price;
+        H.increment_item item_stats item price_list;
+        H.increment_click_power burger_stats 10)
+
+let text_draw num x y color size =
+  R.draw_text (string_of_int num) x y size color
 
 let rec loop texture =
-  let bg = fst texture in
-  let burger = snd texture in
+  let bg, burger, buy = texture in
   match R.window_should_close () with
   | true -> R.close_window ()
   | _ ->
       R.begin_drawing ();
       R.clear_background R.Color.raywhite;
       R.draw_texture bg 0 0 R.Color.raywhite;
-      R.draw_texture burger 425 350 R.Color.raywhite;
+      R.draw_texture burger 375 293 R.Color.raywhite;
+      R.draw_texture buy 1005 222 R.Color.raywhite;
+      R.draw_texture buy 880 222 R.Color.raywhite;
+      R.draw_texture buy 1020 299 R.Color.raywhite;
+      R.draw_texture buy 1020 369 R.Color.raywhite;
+      R.draw_texture buy 1020 439 R.Color.raywhite;
+      R.draw_texture buy 1020 509 R.Color.raywhite;
+      R.draw_texture buy 1020 579 R.Color.raywhite;
+      R.draw_texture buy 1020 649 R.Color.raywhite;
       time := !time + 1;
       if !time = 60 then (
         time := 0;
@@ -54,96 +89,47 @@ let rec loop texture =
             state := 1;
             H.increment_burger_click burger_stats);
 
-      (*The following hitbox detections should probably be moved into another
-        function called shop or something like that*)
-      if R.check_collision_point_rec mouse_point sauce_hitbox then
-        if R.is_mouse_button_down R.MouseButton.Left then
-          if
-            !state = 0
-            && burger_stats.burgers > price_list.sauce_price
-            && item_stats.sauce
-          then (
-            state := 1;
-            H.decrease_burger_spend burger_stats price_list.sauce_price;
-            H.increment_item item_stats "sauce" price_list;
-            H.increment_click_power burger_stats 2);
+      perm_upgrade price_list.sauce_price "sauce" mouse_point sauce_hitbox
+        item_stats.sauce;
 
-      if R.check_collision_point_rec mouse_point secret_sauce_hitbox then
-        if R.is_mouse_button_down R.MouseButton.Left then
-          if
-            !state = 0
-            && burger_stats.burgers > price_list.secret_sauce_price
-            && item_stats.secret_sauce
-          then (
-            state := 1;
-            H.decrease_burger_spend burger_stats price_list.secret_sauce_price;
-            H.increment_item item_stats "secret sauce" price_list;
-            H.increment_click_power burger_stats 10);
+      perm_upgrade price_list.secret_sauce_price "secret sauce" mouse_point
+        secret_sauce_hitbox item_stats.secret_sauce;
 
-      if R.check_collision_point_rec mouse_point spatula_hitbox then
-        if R.is_mouse_button_down R.MouseButton.Left then
-          if !state = 0 && burger_stats.burgers > price_list.spatula_price then (
-            state := 1;
-            H.decrease_burger_spend burger_stats price_list.spatula_price;
-            H.increment_item item_stats "spatula" price_list;
-            H.increment_bps burger_stats "spatula");
+      shop price_list.spatula_price "spatula" mouse_point spatula_hitbox;
 
-      if R.check_collision_point_rec mouse_point grilling_dad_hitbox then
-        if R.is_mouse_button_down R.MouseButton.Left then
-          if !state = 0 && burger_stats.burgers > price_list.grilling_dad_price
-          then (
-            state := 1;
-            H.decrease_burger_spend burger_stats price_list.grilling_dad_price;
-            H.increment_item item_stats "grilling dad" price_list;
-            H.increment_bps burger_stats "grilling dad");
+      shop price_list.grilling_dad_price "grilling dad" mouse_point
+        grilling_dad_hitbox;
 
-      if R.check_collision_point_rec mouse_point burger_tree_hitbox then
-        if R.is_mouse_button_down R.MouseButton.Left then
-          if !state = 0 && burger_stats.burgers > price_list.burger_tree_price
-          then (
-            state := 1;
-            H.decrease_burger_spend burger_stats price_list.burger_tree_price;
-            H.increment_item item_stats "burger tree" price_list;
-            H.increment_bps burger_stats "burger tree");
+      shop price_list.burger_tree_price "burger tree" mouse_point
+        burger_tree_hitbox;
 
-      if R.check_collision_point_rec mouse_point food_truck_hitbox then
-        if R.is_mouse_button_down R.MouseButton.Left then
-          if !state = 0 && burger_stats.burgers > price_list.food_truck_price
-          then (
-            state := 1;
-            H.decrease_burger_spend burger_stats price_list.food_truck_price;
-            H.increment_item item_stats "food truck" price_list;
-            H.increment_bps burger_stats "food truck");
+      shop price_list.food_truck_price "food truck" mouse_point
+        food_truck_hitbox;
 
-      if R.check_collision_point_rec mouse_point burger_lab_hitbox then
-        if R.is_mouse_button_down R.MouseButton.Left then
-          if !state = 0 && burger_stats.burgers > price_list.burger_lab_price
-          then (
-            state := 1;
-            H.decrease_burger_spend burger_stats price_list.burger_lab_price;
-            H.increment_item item_stats "burger lab" price_list;
-            H.increment_bps burger_stats "burger lab");
+      shop price_list.burger_lab_price "burger lab" mouse_point
+        burger_lab_hitbox;
 
-      if R.check_collision_point_rec mouse_point burger_wormhole_hitbox then
-        if R.is_mouse_button_down R.MouseButton.Left then
-          if
-            !state = 0
-            && burger_stats.burgers > price_list.burger_wormhole_price
-          then (
-            state := 1;
-            H.decrease_burger_spend burger_stats
-              price_list.burger_wormhole_price;
-            H.increment_item item_stats "burger wormhole" price_list;
-            H.increment_bps burger_stats "burger wormhole");
+      shop price_list.burger_wormhole_price "burger wormhole" mouse_point
+        burger_wormhole_hitbox;
 
-      R.draw_text
-        (string_of_int burger_stats.burgers)
-        425 30 100
-        (R.Color.create 50 42 79 255);
-      R.draw_text
-        (string_of_int burger_stats.bps)
-        415 120 40
-        (R.Color.create 50 42 79 255);
+      text_draw burger_stats.burgers 505 15 font_color 100;
+
+      text_draw burger_stats.bps 400 105 font_color 40;
+
+      text_draw price_list.spatula_price 910 302 price_color 35;
+      text_draw price_list.grilling_dad_price 910 372 price_color 35;
+      text_draw price_list.burger_tree_price 910 442 price_color 35;
+      text_draw price_list.food_truck_price 910 512 price_color 35;
+      text_draw price_list.burger_lab_price 910 582 price_color 35;
+      text_draw price_list.burger_wormhole_price 910 652 price_color 35;
+
+      text_draw item_stats.spatula 165 555 font_color 50;
+      text_draw item_stats.grilling_dad 165 640 font_color 50;
+      text_draw item_stats.burger_tree 365 555 font_color 50;
+      text_draw item_stats.food_truck 365 640 font_color 50;
+      text_draw item_stats.burger_lab 600 555 font_color 50;
+      text_draw item_stats.burger_wormhole 600 640 font_color 50;
+
       R.end_drawing ();
       loop texture
 
