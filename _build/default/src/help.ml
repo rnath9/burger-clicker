@@ -1,3 +1,5 @@
+include Config
+
 type information = {
   mutable burgers : int;
   mutable bps : int;

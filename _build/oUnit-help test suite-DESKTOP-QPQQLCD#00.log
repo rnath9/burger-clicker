@@ -1,0 +1,95 @@
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Runner: processes
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Chooser: simple
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Configuration suite_name = "help test suite"
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Configuration cache_filename = "/home/sjr275/3110/3110-final/_build/oUnit-$(suite_name).cache"
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Configuration run_gc_full_major = "true"
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Configuration display = "true"
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Configuration results_style_1_X = "false"
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Configuration testdata_dir = "none"
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Configuration health_check_interval = "1."
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Configuration verbose = "false"
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Configuration chooser = "simple"
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Configuration output_html_dir = "none"
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Configuration processes_kill_period = "5."
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Configuration runner = "processes"
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Configuration shards = "2"
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Configuration processes_grace_period = "5."
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Configuration log_encoding = "utf-8"
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Configuration output_junit_file = "none"
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Configuration ci = "false"
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Configuration output_file = "/home/sjr275/3110/3110-final/_build/oUnit-$(suite_name)-$(shard_id).log"
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Using 2 workers maximum.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Starting worker number DESKTOP-QPQQLCD#01.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Worker DESKTOP-QPQQLCD#01 started.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Starting worker number DESKTOP-QPQQLCD#02.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Worker DESKTOP-QPQQLCD#02 started.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: 2 tests running: help test suite:1:Buying an item, help test suite:0:increment with one burger.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#01 I: Start test help test suite:0:increment with one burger.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: 2 tests running: help test suite:1:Buying an item, help test suite:0:increment with one burger.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#02 I: Start test help test suite:1:Buying an item.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: 2 tests running: help test suite:1:Buying an item, help test suite:0:increment with one burger.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#01 I: Test help test suite:0:increment with one burger is successful.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: 2 tests running: help test suite:1:Buying an item, help test suite:0:increment with one burger.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#01 I: End test help test suite:0:increment with one burger.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#02 I: Test help test suite:1:Buying an item is successful.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: 2 tests running: help test suite:1:Buying an item, help test suite:0:increment with one burger.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#02 I: End test help test suite:1:Buying an item.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: 2 tests running: help test suite:2:buy spatula, help test suite:1:Buying an item.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: 2 tests running: help test suite:3:incrementing based on bps, help test suite:2:buy spatula.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#01 I: Start test help test suite:2:buy spatula.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: 2 tests running: help test suite:3:incrementing based on bps, help test suite:2:buy spatula.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#02 I: Start test help test suite:3:incrementing based on bps.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: 2 tests running: help test suite:3:incrementing based on bps, help test suite:2:buy spatula.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#01 I: Test help test suite:2:buy spatula is successful.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#02 I: Test help test suite:3:incrementing based on bps is successful.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: 2 tests running: help test suite:3:incrementing based on bps, help test suite:2:buy spatula.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#01 I: End test help test suite:2:buy spatula.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#02 I: End test help test suite:3:incrementing based on bps.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: 2 tests running: help test suite:3:incrementing based on bps, help test suite:2:buy spatula.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: 2 tests running: help test suite:5:no truncation needed, help test suite:4:incrementing click power.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#01 I: Start test help test suite:5:no truncation needed.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: 2 tests running: help test suite:5:no truncation needed, help test suite:4:incrementing click power.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#02 I: Start test help test suite:4:incrementing click power.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: 2 tests running: help test suite:5:no truncation needed, help test suite:4:incrementing click power.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#02 I: Test help test suite:4:incrementing click power is successful.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: 2 tests running: help test suite:5:no truncation needed, help test suite:4:incrementing click power.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#02 I: End test help test suite:4:incrementing click power.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#01 I: Test help test suite:5:no truncation needed is successful.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: 2 tests running: help test suite:5:no truncation needed, help test suite:4:incrementing click power.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#01 I: End test help test suite:5:no truncation needed.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Still 2 tests running : help test suite:6:truncation needed, help test suite:5:no truncation needed.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: 2 tests running: help test suite:6:truncation needed, help test suite:5:no truncation needed.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#02 I: Start test help test suite:6:truncation needed.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Still 1 tests running : help test suite:6:truncation needed.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: 1 tests running: help test suite:6:truncation needed.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#02 I: Test help test suite:6:truncation needed is successful.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Still 1 tests running : help test suite:6:truncation needed.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: 1 tests running: help test suite:6:truncation needed.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#02 I: End test help test suite:6:truncation needed.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Still 1 tests running : help test suite:6:truncation needed.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: 1 tests running: help test suite:6:truncation needed.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: 0 tests running: .
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Worker DESKTOP-QPQQLCD#01 has ended.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Worker DESKTOP-QPQQLCD#02 has ended.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Used 2 worker during test execution.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Run 4 tests with shard DESKTOP-QPQQLCD#02.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Run 3 tests with shard DESKTOP-QPQQLCD#01.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Check health of shard DESKTOP-QPQQLCD#02, 1 times.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Check health of shard DESKTOP-QPQQLCD#01, 4 times.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: ==============
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Summary:
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Test help test suite:6:truncation needed is successful.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Test help test suite:5:no truncation needed is successful.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Test help test suite:4:incrementing click power is successful.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Test help test suite:3:incrementing based on bps is successful.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Test help test suite:2:buy spatula is successful.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Test help test suite:1:Buying an item is successful.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Test help test suite:0:increment with one burger is successful.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Ran: 7 tests in: 0.11 seconds.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Cases: 7.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Tried: 7.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Errors: 0.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Failures: 0.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Skip: 0.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Todo: 0.
+2023-04-18T05:48:42+00:00 DESKTOP-QPQQLCD#00 I: Timeout: 0.

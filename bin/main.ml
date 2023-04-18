@@ -23,19 +23,6 @@ let setup () =
   R.unload_image buy_image;
   (bg_texture, burger_texture, buy_texture)
 
-let font_color = R.Color.create 50 42 79 255
-let price_color = R.Color.create 226 243 228 255
-let burger_hitbox = R.Rectangle.create 375. 293. 110. 85.
-let sauce_hitbox = R.Rectangle.create 870. 115. 84. 30.
-let secret_sauce_hitbox = R.Rectangle.create 1005. 222. 84. 30.
-let spatula_hitbox = R.Rectangle.create 1020. 299. 84. 30.
-let grilling_dad_hitbox = R.Rectangle.create 1020. 369. 84. 30.
-let burger_tree_hitbox = R.Rectangle.create 1020. 439. 84. 30.
-let food_truck_hitbox = R.Rectangle.create 1020. 509. 84. 30.
-let burger_lab_hitbox = R.Rectangle.create 1020. 579. 84. 30.
-let burger_wormhole_hitbox = R.Rectangle.create 1020. 649. 254. 109.
-let suffix_array = [ ""; "K"; "M"; "B"; "T"; "Q" ]
-
 let shop (price : int) (item : string) mouse hitbox =
   if R.check_collision_point_rec mouse hitbox then
     if R.is_mouse_button_down R.MouseButton.Left then
@@ -82,71 +69,73 @@ let rec loop texture =
       else ();
       if R.is_mouse_button_down R.MouseButton.Left = false then state := 0;
       let mouse_point = R.get_mouse_position () in
-      if R.check_collision_point_rec mouse_point burger_hitbox then
+      if R.check_collision_point_rec mouse_point H.burger_hitbox then
         (*we can even switch the burger to look like you've hovered over it!*)
         if R.is_mouse_button_down R.MouseButton.Left then
           if !state = 0 then (
             state := 1;
             H.increment_burger_click burger_stats);
 
-      perm_upgrade price_list.sauce_price "sauce" mouse_point sauce_hitbox
+      perm_upgrade price_list.sauce_price "sauce" mouse_point H.sauce_hitbox
         item_stats.sauce;
 
       perm_upgrade price_list.secret_sauce_price "secret sauce" mouse_point
-        secret_sauce_hitbox item_stats.secret_sauce;
+        H.secret_sauce_hitbox item_stats.secret_sauce;
 
-      shop price_list.spatula_price "spatula" mouse_point spatula_hitbox;
+      shop price_list.spatula_price "spatula" mouse_point H.spatula_hitbox;
 
       shop price_list.grilling_dad_price "grilling dad" mouse_point
-        grilling_dad_hitbox;
+        H.grilling_dad_hitbox;
 
       shop price_list.burger_tree_price "burger tree" mouse_point
-        burger_tree_hitbox;
+        H.burger_tree_hitbox;
 
       shop price_list.food_truck_price "food truck" mouse_point
-        food_truck_hitbox;
+        H.food_truck_hitbox;
 
       shop price_list.burger_lab_price "burger lab" mouse_point
-        burger_lab_hitbox;
+        H.burger_lab_hitbox;
 
       shop price_list.burger_wormhole_price "burger wormhole" mouse_point
-        burger_wormhole_hitbox;
+        H.burger_wormhole_hitbox;
 
       text_draw
-        (H.truncate (float_of_int burger_stats.burgers) suffix_array)
-        505 15 font_color 100;
+        (H.truncate (float_of_int burger_stats.burgers) H.suffix_array)
+        505 15 H.font_color 100;
 
       text_draw
-        (H.truncate (float_of_int burger_stats.bps) suffix_array)
-        400 105 font_color 40;
+        (H.truncate (float_of_int burger_stats.bps) H.suffix_array)
+        400 105 H.font_color 40;
 
       text_draw
-        (H.truncate (float_of_int price_list.spatula_price) suffix_array)
-        910 302 price_color 35;
+        (H.truncate (float_of_int price_list.spatula_price) H.suffix_array)
+        910 302 H.price_color 35;
       text_draw
-        (H.truncate (float_of_int price_list.grilling_dad_price) suffix_array)
-        910 372 price_color 35;
+        (H.truncate (float_of_int price_list.grilling_dad_price) H.suffix_array)
+        910 372 H.price_color 35;
       text_draw
-        (H.truncate (float_of_int price_list.burger_tree_price) suffix_array)
-        910 442 price_color 35;
+        (H.truncate (float_of_int price_list.burger_tree_price) H.suffix_array)
+        910 442 H.price_color 35;
       text_draw
-        (H.truncate (float_of_int price_list.food_truck_price) suffix_array)
-        910 512 price_color 35;
+        (H.truncate (float_of_int price_list.food_truck_price) H.suffix_array)
+        910 512 H.price_color 35;
       text_draw
-        (H.truncate (float_of_int price_list.burger_lab_price) suffix_array)
-        910 582 price_color 35;
+        (H.truncate (float_of_int price_list.burger_lab_price) H.suffix_array)
+        910 582 H.price_color 35;
       text_draw
         (H.truncate
            (float_of_int price_list.burger_wormhole_price)
-           suffix_array)
-        910 652 price_color 35;
+           H.suffix_array)
+        910 652 H.price_color 35;
 
-      text_draw (string_of_int item_stats.spatula) 165 555 font_color 50;
-      text_draw (string_of_int item_stats.grilling_dad) 165 640 font_color 50;
-      text_draw (string_of_int item_stats.burger_tree) 365 555 font_color 50;
-      text_draw (string_of_int item_stats.food_truck) 365 640 font_color 50;
-      text_draw (string_of_int item_stats.burger_lab) 600 555 font_color 50;
-      text_draw (string_of_int item_stats.burger_wormhole) 600 640 font_color 50;
+      text_draw (string_of_int item_stats.spatula) 165 555 H.font_color 50;
+      text_draw (string_of_int item_stats.grilling_dad) 165 640 H.font_color 50;
+      text_draw (string_of_int item_stats.burger_tree) 365 555 H.font_color 50;
+      text_draw (string_of_int item_stats.food_truck) 365 640 H.font_color 50;
+      text_draw (string_of_int item_stats.burger_lab) 600 555 H.font_color 50;
+      text_draw
+        (string_of_int item_stats.burger_wormhole)
+        600 640 H.font_color 50;
 
       R.end_drawing ();
       loop texture
