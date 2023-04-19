@@ -43,6 +43,9 @@ let setup () =
   let burger_clicked_image = R.load_image "images/WhopperClicked.png" in
   let burger_clicked_texture = R.load_texture_from_image burger_clicked_image in
   R.unload_image burger_clicked_image;
+  let golden_burger_image = R.load_image "images/GoldenWhopper.png" in
+  let golden_burger_texture = R.load_texture_from_image golden_burger_image in
+  R.unload_image golden_burger_image;
 
   ( bg_texture,
     burger_texture,
@@ -50,7 +53,8 @@ let setup () =
     burger_clicked_texture,
     buy_texture,
     buy_hover_texture,
-    buy_clicked_texture )
+    buy_clicked_texture,
+    golden_burger_texture )
 
 let hover_mechanics mouse buy_clicked buy_hover hitbox coord =
   if R.check_collision_point_rec mouse hitbox then
@@ -70,7 +74,14 @@ let text_draw text x y color size =
     (float_of_int size) 5. color
 
 let rec loop texture =
-  let bg, burger, burger_hover, burger_clicked, buy, buy_hover, buy_clicked =
+  let ( bg,
+        burger,
+        burger_hover,
+        burger_clicked,
+        buy,
+        buy_hover,
+        buy_clicked,
+        golden_burger ) =
     texture
   in
   match R.window_should_close () with
@@ -120,14 +131,16 @@ let rec loop texture =
         (1020, 649);
 
       if random_stats.timer = 0 then (
+        random_draw.despawn_timer <- random_draw.despawn_timer - 1;
+        if random_draw.despawn_timer = 0 then random_draw.random_flag <- false;
         if random_draw.random_flag then (
-          R.draw_texture burger
+          R.draw_texture golden_burger
             (int_of_float random_draw.x)
             (int_of_float random_draw.y)
             R.Color.raywhite;
           if
             R.check_collision_point_rec mouse_point
-              (R.Rectangle.create random_draw.x random_draw.y 110. 85.)
+              (R.Rectangle.create random_draw.x random_draw.y 70. 55.)
           then
             if R.is_mouse_button_down R.MouseButton.Left then (
               if !state = 2 then (
@@ -148,7 +161,8 @@ let rec loop texture =
           H.Rand.self_init ();
           random_draw.x <- H.Rand.int 730 + 20 |> float_of_int;
           random_draw.y <- H.Rand.int 350 + 115 |> float_of_int;
-          random_draw.random_flag <- true))
+          random_draw.random_flag <- true;
+          random_draw.despawn_timer <- 600))
       else if random_stats.timer = -1 then (
         burger_stats.bps <- burger_stats.bps / !bps_mult;
         burger_stats.click_power <- burger_stats.click_power / !click_mult;

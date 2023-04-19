@@ -44,6 +44,7 @@ type random_event_draw = {
   mutable alpha : float;
   timer : int;
   mutable random_flag : bool;
+  mutable despawn_timer : int;
 }
 
 (**[item_init] initializes the number of powerups each user has at the start of
@@ -75,7 +76,14 @@ let item_price_init =
   }
 
 let random_event_draw_init =
-  { x = 0.; y = 0.; alpha = 0.; timer = 0; random_flag = false }
+  {
+    x = 0.;
+    y = 0.;
+    alpha = 0.;
+    timer = 0;
+    random_flag = false;
+    despawn_timer = 0;
+  }
 
 let font_color = R.Color.create 50 42 79 255
 let price_color = R.Color.create 226 243 228 255
