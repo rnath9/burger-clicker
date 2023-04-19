@@ -7,6 +7,7 @@ let price_list = H.item_price_init
 let random_stats = H.init_random_stats
 let bps_mult = ref 1
 let click_mult = ref 1
+let random_draw = H.random_event_draw_init
 let state = ref 0
 
 (*state: 0 mouse up
@@ -119,7 +120,45 @@ let rec loop texture =
       hover_mechanics mouse_point buy_clicked buy_hover H.burger_wormhole_hitbox
         (1020, 649);
 
-      H.random_events random_stats burger_stats bps_mult click_mult;
+      if random_stats.timer = 0 then (
+        if random_draw.random_flag then (
+          R.draw_texture burger
+            (int_of_float random_draw.x)
+            (int_of_float random_draw.y)
+            R.Color.raywhite;
+          if R.is_mouse_button_down R.MouseButton.Left = false then state := 0;
+          let mouse_point = R.get_mouse_position () in
+          if
+            R.check_collision_point_rec mouse_point
+              (R.Rectangle.create random_draw.x random_draw.y 110. 85.)
+          then
+            if R.is_mouse_button_down R.MouseButton.Left then (
+              if !state = 2 then (
+                state := 3;
+                R.draw_texture burger_clicked
+                  (int_of_float random_draw.x)
+                  (int_of_float random_draw.y)
+                  R.Color.raywhite;
+                H.random_events random_stats burger_stats bps_mult click_mult;
+                random_draw.random_flag <- false))
+            else (
+              state := 2;
+              R.draw_texture burger_hover
+                (int_of_float random_draw.x)
+                (int_of_float random_draw.y)
+                R.Color.raywhite))
+        else if H.Rand.int 100 = 1 then (
+          H.Rand.self_init ();
+          random_draw.x <- H.Rand.int 730 + 20 |> float_of_int;
+          random_draw.y <- H.Rand.int 300 + 115 |> float_of_int;
+          random_draw.random_flag <- true))
+      else if random_stats.timer = -1 then (
+        burger_stats.bps <- burger_stats.bps / !bps_mult;
+        burger_stats.click_power <- burger_stats.click_power / !click_mult;
+        bps_mult := 1;
+        click_mult := 1;
+        random_stats.timer <- random_stats.timer + 1)
+      else random_stats.timer <- random_stats.timer + 1;
 
       H.perm_upgrade price_list.sauce_price "sauce" mouse_point H.sauce_hitbox
         item_stats.sauce price_list.sauce_price burger_stats item_stats state
@@ -130,22 +169,23 @@ let rec loop texture =
         price_list.secret_sauce_price burger_stats item_stats state price_list;
 
       H.shop price_list.spatula_price "spatula" mouse_point H.spatula_hitbox
-        burger_stats item_stats state price_list;
+        burger_stats item_stats state price_list bps_mult;
 
       H.shop price_list.grilling_dad_price "grilling dad" mouse_point
-        H.grilling_dad_hitbox burger_stats item_stats state price_list;
+        H.grilling_dad_hitbox burger_stats item_stats state price_list bps_mult;
 
       H.shop price_list.burger_tree_price "burger tree" mouse_point
-        H.burger_tree_hitbox burger_stats item_stats state price_list;
+        H.burger_tree_hitbox burger_stats item_stats state price_list bps_mult;
 
       H.shop price_list.food_truck_price "food truck" mouse_point
-        H.food_truck_hitbox burger_stats item_stats state price_list;
+        H.food_truck_hitbox burger_stats item_stats state price_list bps_mult;
 
       H.shop price_list.burger_lab_price "burger lab" mouse_point
-        H.burger_lab_hitbox burger_stats item_stats state price_list;
+        H.burger_lab_hitbox burger_stats item_stats state price_list bps_mult;
 
       H.shop price_list.burger_wormhole_price "burger wormhole" mouse_point
-        H.burger_wormhole_hitbox burger_stats item_stats state price_list;
+        H.burger_wormhole_hitbox burger_stats item_stats state price_list
+        bps_mult;
 
       text_draw
         (H.truncate (float_of_int burger_stats.burgers) H.suffix_array)

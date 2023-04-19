@@ -14,9 +14,9 @@ let test_decr_bur_spend (name : string) (info : information) (price : int)
   assert_equal answer info.burgers ~printer:string_of_int
 
 let test_incr_bps (name : string) (info : information) (item : string)
-    (answer : int) : test =
+    (answer : int) (bps_mult : int ref) : test =
   name >:: fun _ ->
-  increment_bps info item;
+  increment_bps info item bps_mult;
   assert_equal answer info.bps ~printer:string_of_int
 
 let test_incr_bur_bps (name : string) (info : information) (answer : int) : test
@@ -37,6 +37,7 @@ let test_truncate (name : string) (num : float) (suffix : string list)
 
 let init_state = { burgers = 0; bps = 0; click_power = 1 }
 let suffix_array = [ ""; "K"; "M"; "B"; "T"; "Q" ]
+let bps_mult = ref 1
 
 let help_tests =
   [
@@ -44,7 +45,7 @@ let help_tests =
     test_decr_bur_spend "Buying an item"
       { burgers = 10000; bps = 100; click_power = 2 }
       5000 5000;
-    test_incr_bps "buy spatula" init_state "spatula" 1;
+    test_incr_bps "buy spatula" init_state "spatula" 1 bps_mult;
     test_incr_bur_bps "incrementing based on bps"
       { burgers = 10000; bps = 100; click_power = 2 }
       10100;
