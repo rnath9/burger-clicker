@@ -75,7 +75,7 @@ let item_price_init =
     burger_wormhole_price = 1000000;
   }
 
-let random_event_draw_init =
+let random_draw =
   {
     x = 0.;
     y = 0.;
@@ -119,4 +119,4 @@ let burger_lab_hitbox = R.Rectangle.create 1020. 579. 85. 38.
 let burger_wormhole_hitbox = R.Rectangle.create 1020. 649. 254. 109.
 let random_event_hitbox = R.Rectangle.create 0. 0. 0. 0.
 let suffix_array = [ ""; "K"; "M"; "B"; "T"; "Q" ]
-let init_random_stats = { chance = 100; timer = 0; min_time = 10 }
+let random_stats = { chance = 100; timer = 0; min_time = 10 }
