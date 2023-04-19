@@ -4,6 +4,9 @@ module H = Help
 let burger_stats = H.burger_init
 let item_stats = H.item_init
 let price_list = H.item_price_init
+let random_stats = H.init_random_stats
+let bps_mult = ref 1
+let click_mult = ref 1
 let state = ref 0
 
 (*state: 0 mouse up
@@ -47,24 +50,6 @@ let setup () =
     buy_texture,
     buy_hover_texture,
     buy_clicked_texture )
-
-let shop (price : int) (item : string) mouse hitbox =
-  if R.check_collision_point_rec mouse hitbox then
-    if R.is_mouse_button_down R.MouseButton.Left then
-      if !state = 6 && burger_stats.burgers > price then (
-        state := 4;
-        H.decrease_burger_spend burger_stats price;
-        H.increment_item item_stats item price_list;
-        H.increment_bps burger_stats item)
-
-let perm_upgrade (price : int) (item : string) mouse hitbox purchased pr =
-  if R.check_collision_point_rec mouse hitbox then
-    if R.is_mouse_button_down R.MouseButton.Left then
-      if !state = 6 && burger_stats.burgers > pr && purchased then (
-        state := 4;
-        H.decrease_burger_spend burger_stats price;
-        H.increment_item item_stats item price_list;
-        H.increment_click_power burger_stats 10)
 
 let hover_mechanics mouse buy_clicked buy_hover hitbox coord =
   if R.check_collision_point_rec mouse hitbox then
@@ -134,29 +119,33 @@ let rec loop texture =
       hover_mechanics mouse_point buy_clicked buy_hover H.burger_wormhole_hitbox
         (1020, 649);
 
-      perm_upgrade price_list.sauce_price "sauce" mouse_point H.sauce_hitbox
-        item_stats.sauce price_list.sauce_price;
+      H.random_events random_stats burger_stats bps_mult click_mult;
 
-      perm_upgrade price_list.secret_sauce_price "secret sauce" mouse_point
+      H.perm_upgrade price_list.sauce_price "sauce" mouse_point H.sauce_hitbox
+        item_stats.sauce price_list.sauce_price burger_stats item_stats state
+        price_list;
+
+      H.perm_upgrade price_list.secret_sauce_price "secret sauce" mouse_point
         H.secret_sauce_hitbox item_stats.secret_sauce
-        price_list.secret_sauce_price;
+        price_list.secret_sauce_price burger_stats item_stats state price_list;
 
-      shop price_list.spatula_price "spatula" mouse_point H.spatula_hitbox;
+      H.shop price_list.spatula_price "spatula" mouse_point H.spatula_hitbox
+        burger_stats item_stats state price_list;
 
-      shop price_list.grilling_dad_price "grilling dad" mouse_point
-        H.grilling_dad_hitbox;
+      H.shop price_list.grilling_dad_price "grilling dad" mouse_point
+        H.grilling_dad_hitbox burger_stats item_stats state price_list;
 
-      shop price_list.burger_tree_price "burger tree" mouse_point
-        H.burger_tree_hitbox;
+      H.shop price_list.burger_tree_price "burger tree" mouse_point
+        H.burger_tree_hitbox burger_stats item_stats state price_list;
 
-      shop price_list.food_truck_price "food truck" mouse_point
-        H.food_truck_hitbox;
+      H.shop price_list.food_truck_price "food truck" mouse_point
+        H.food_truck_hitbox burger_stats item_stats state price_list;
 
-      shop price_list.burger_lab_price "burger lab" mouse_point
-        H.burger_lab_hitbox;
+      H.shop price_list.burger_lab_price "burger lab" mouse_point
+        H.burger_lab_hitbox burger_stats item_stats state price_list;
 
-      shop price_list.burger_wormhole_price "burger wormhole" mouse_point
-        H.burger_wormhole_hitbox;
+      H.shop price_list.burger_wormhole_price "burger wormhole" mouse_point
+        H.burger_wormhole_hitbox burger_stats item_stats state price_list;
 
       text_draw
         (H.truncate (float_of_int burger_stats.burgers) H.suffix_array)

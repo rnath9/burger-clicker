@@ -1,10 +1,6 @@
 include Config
+include Randomevent
 
-type information = {
-  mutable burgers : int;
-  mutable bps : int;
-  mutable click_power : int;
-}
 (**[information] holds the user's stats — namely their burgers, bps, and clicking power.*)
 
 (** [burger_init] initializes the game with 0 burgers, 0 burgers per second, 
@@ -42,57 +38,15 @@ let increment_burger_bps t = t.burgers <- t.burgers + t.bps
     click by a multiplier [mult] in a given information type [t]*)
 let increment_click_power t mult = t.click_power <- t.click_power * mult
 
-type powerups = {
-  mutable sauce : bool;
-  mutable secret_sauce : bool;
-  mutable spatula : int;
-  mutable grilling_dad : int;
-  mutable burger_tree : int;
-  mutable food_truck : int;
-  mutable burger_lab : int;
-  mutable burger_wormhole : int;
-}
 (**[powerups] contains the number of powerups a user has.*)
 
-type prices = {
-  mutable sauce_price : int;
-  mutable secret_sauce_price : int;
-  mutable spatula_price : int;
-  mutable grilling_dad_price : int;
-  mutable burger_tree_price : int;
-  mutable food_truck_price : int;
-  mutable burger_lab_price : int;
-  mutable burger_wormhole_price : int;
-}
 (**[prices] holds the prices associated with each powerup enumerated in [powerups]*)
 
 (**[item_init] initializes the number of powerups each user has at the start of
       the game*)
-let item_init =
-  {
-    sauce = true;
-    secret_sauce = true;
-    spatula = 0;
-    grilling_dad = 0;
-    burger_tree = 0;
-    food_truck = 0;
-    burger_lab = 0;
-    burger_wormhole = 0;
-  }
 
 (**[item_price_init] initializes the prices for each of the power ups a user may
     get at the start of the game.*)
-let item_price_init =
-  {
-    sauce_price = 1000;
-    secret_sauce_price = 500000;
-    spatula_price = 15;
-    grilling_dad_price = 100;
-    burger_tree_price = 1500;
-    food_truck_price = 10000;
-    burger_lab_price = 100000;
-    burger_wormhole_price = 1000000;
-  }
 
 (**[increase_price price] is used to increase the price [price] of an item by 33% of its intial 
     cost after buying it. Example: if [price] is 300, [increase_price price] will return
@@ -157,3 +111,49 @@ let rec truncate num suffix =
             | _ -> "")
           ^ suff)
   | n -> truncate (n /. 1000.) (List.tl suffix)
+
+let shop (price : int) (item : string) mouse hitbox burger_stats item_stats
+    state price_list =
+  if R.check_collision_point_rec mouse hitbox then
+    if R.is_mouse_button_down R.MouseButton.Left then
+      if !state = 6 && burger_stats.burgers > price then (
+        state := 4;
+        decrease_burger_spend burger_stats price;
+        increment_item item_stats item price_list;
+        increment_bps burger_stats item)
+
+let perm_upgrade (price : int) (item : string) mouse hitbox purchased pr
+    burger_stats item_stats state price_list =
+  if R.check_collision_point_rec mouse hitbox then
+    if R.is_mouse_button_down R.MouseButton.Left then
+      if !state = 6 && burger_stats.burgers > pr && purchased then (
+        state := 4;
+        decrease_burger_spend burger_stats price;
+        increment_item item_stats item price_list;
+        increment_click_power burger_stats 10)
+
+let random_events random_stats burger_stats bps_mult click_mult =
+  if random_stats.timer = 0 then
+    match Randomevent.generate_event random_stats.chance with
+    | "burger gift" ->
+        print_endline "BURGER GIFT";
+        burger_stats.burgers <-
+          burger_stats.burgers + Randomevent.burger_gift burger_stats.burgers
+    | "bps boost" ->
+        print_endline "BPS BOOST";
+        bps_mult := Rand.int 3 + 2;
+        burger_stats.bps <- !bps_mult * burger_stats.bps;
+        Randomevent.generate_timer random_stats
+    | "click power boost" ->
+        print_endline "CLICK BOOST";
+        click_mult := Rand.int 10 + 10;
+        burger_stats.click_power <- !click_mult * burger_stats.click_power;
+        Randomevent.generate_timer random_stats
+    | "advice" -> ()
+    | "nothing" -> ()
+    | _ -> failwith "random event error"
+  else if random_stats.timer = -1 then (
+    burger_stats.bps <- burger_stats.bps / !bps_mult;
+    bps_mult := 1;
+    random_stats.timer <- random_stats.timer + 1)
+  else random_stats.timer <- random_stats.timer + 1
