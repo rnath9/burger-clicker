@@ -85,6 +85,27 @@ let random_event_draw_init =
     despawn_timer = 0;
   }
 
+type animation = {
+  mutable flag : bool;
+  mutable transparency : int;
+  mutable despawn_timer : int;
+  mutable text : string;
+  mutable width : int;
+  mutable pause_flag : bool;
+  mutable reverse_flag : bool;
+}
+
+let animation =
+  {
+    flag = false;
+    transparency = 255;
+    despawn_timer = 0;
+    text = "";
+    width = 0;
+    pause_flag = false;
+    reverse_flag = false;
+  }
+
 let font_color = R.Color.create 50 42 79 255
 let price_color = R.Color.create 226 243 228 255
 let burger_hitbox = R.Rectangle.create 375. 293. 110. 85.

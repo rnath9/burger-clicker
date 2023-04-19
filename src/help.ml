@@ -120,22 +120,70 @@ let perm_upgrade (price : int) (item : string) mouse hitbox purchased pr
         increment_item item_stats item price_list;
         increment_click_power burger_stats 10)
 
+let animate_text (animation : animation) (text : string) =
+  animation.text <- text;
+  animation.width <- R.measure_text animation.text 40;
+  animation.flag <- true
+
 let random_events (random_stats : random_stats) burger_stats bps_mult click_mult
     =
   if random_stats.timer = 0 then
     match Rand.int 3 with
     | 0 ->
-        print_endline "BURGER GIFT";
-        burger_stats.burgers <-
-          burger_stats.burgers + Randomevent.burger_gift burger_stats.burgers
+        let burger_gift = Randomevent.burger_gift burger_stats.burgers in
+        animate_text animation ("BURGER GIFT! + " ^ string_of_int burger_gift);
+        burger_stats.burgers <- burger_stats.burgers + burger_gift
     | 1 ->
-        print_endline "BPS BOOST";
         bps_mult := Rand.int 3 + 2;
+        animate_text animation
+          ("BPS BOOST! " ^ string_of_int !bps_mult ^ "X MORE EFFICIENCY");
         burger_stats.bps <- !bps_mult * burger_stats.bps;
         Randomevent.generate_timer random_stats
     | 2 ->
-        print_endline "CLICK BOOST";
         click_mult := Rand.int 10 + 10;
+        animate_text animation
+          ("CLICK BOOST! " ^ string_of_int !click_mult ^ "X MORE EFFICIENCY");
         burger_stats.click_power <- !click_mult * burger_stats.click_power;
         Randomevent.generate_timer random_stats
     | _ -> failwith "random event error"
+
+let text_draw text x y color size =
+  R.draw_text_ex (R.get_font_default ()) text
+    (R.Vector2.create (float_of_int x) (float_of_int y))
+    (float_of_int size) 5. color
+
+let animate_random () =
+  if animation.flag then
+    if animation.transparency = 0 then (
+      animation.pause_flag <- true;
+      animation.flag <- false;
+      animation.despawn_timer <- 60)
+    else (
+      animation.transparency <- animation.transparency - 5;
+      text_draw animation.text
+        (425 - (animation.width / 2))
+        250
+        (R.Color.create 50 42 79 (255 - animation.transparency))
+        40);
+
+  if animation.pause_flag then
+    if animation.despawn_timer = 0 then (
+      animation.reverse_flag <- true;
+      animation.pause_flag <- false)
+    else (
+      text_draw animation.text
+        (425 - (animation.width / 2))
+        250
+        (R.Color.create 50 42 79 (255 - animation.transparency))
+        40;
+      animation.despawn_timer <- animation.despawn_timer - 1);
+
+  if animation.reverse_flag then
+    if animation.transparency = 255 then animation.reverse_flag <- false
+    else (
+      animation.transparency <- animation.transparency + 5;
+      text_draw animation.text
+        (425 - (animation.width / 2))
+        250
+        (R.Color.create 50 42 79 (255 - animation.transparency))
+        40)
