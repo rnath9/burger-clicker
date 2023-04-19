@@ -9,7 +9,7 @@ type information = {
 
 (** [burger_init] initializes the game with 0 burgers, 0 burgers per second, 
     and 1 burger per click.*)
-let burger_init = { burgers = 50000; bps = 0; click_power = 1 }
+let burger_init = { burgers = 1500; bps = 0; click_power = 1 }
 
 (** [increment_burger_click] increments the burger count by one click 
     in a given information type [t].*)
@@ -148,9 +148,12 @@ let rec truncate num suffix =
       | "" -> n |> int_of_float |> string_of_int
       | _ ->
           string_of_float n
-          ^ (match String.length (string_of_float n) with
-            | 3 -> "00"
-            | 4 -> "0"
+          ^ (match
+               String.length (string_of_float n)
+               - (int_of_float n |> string_of_int |> String.length)
+             with
+            | 1 -> "00"
+            | 2 -> "0"
             | _ -> "")
           ^ suff)
   | n -> truncate (n /. 1000.) (List.tl suffix)
