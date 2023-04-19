@@ -46,6 +46,20 @@ let setup () =
   let golden_burger_image = R.load_image "images/GoldenWhopper.png" in
   let golden_burger_texture = R.load_texture_from_image golden_burger_image in
   R.unload_image golden_burger_image;
+  let golden_burger_hover_image =
+    R.load_image "images/HoveredGoldenWhopper.png"
+  in
+  let golden_burger_hover_texture =
+    R.load_texture_from_image golden_burger_hover_image
+  in
+  R.unload_image golden_burger_hover_image;
+  let golden_burger_clicked_image =
+    R.load_image "images/ClickedGoldenWhopper.png"
+  in
+  let golden_burger_clicked_texture =
+    R.load_texture_from_image golden_burger_clicked_image
+  in
+  R.unload_image golden_burger_clicked_image;
 
   ( bg_texture,
     burger_texture,
@@ -54,7 +68,9 @@ let setup () =
     buy_texture,
     buy_hover_texture,
     buy_clicked_texture,
-    golden_burger_texture )
+    golden_burger_texture,
+    golden_burger_hover_texture,
+    golden_burger_clicked_texture )
 
 let hover_mechanics mouse buy_clicked buy_hover hitbox coord =
   if R.check_collision_point_rec mouse hitbox then
@@ -81,7 +97,9 @@ let rec loop texture =
         buy,
         buy_hover,
         buy_clicked,
-        golden_burger ) =
+        golden_burger,
+        golden_burger_hover,
+        golden_burger_clicked ) =
     texture
   in
   match R.window_should_close () with
@@ -103,8 +121,50 @@ let rec loop texture =
       if !time = 60 then (
         time := 0;
         H.increment_burger_bps burger_stats);
+
       if R.is_mouse_button_down R.MouseButton.Left = false then state := 0;
       let mouse_point = R.get_mouse_position () in
+      if random_stats.timer = 0 then (
+        random_draw.despawn_timer <- random_draw.despawn_timer - 1;
+        if random_draw.despawn_timer = 0 then random_draw.random_flag <- false;
+        if random_draw.random_flag then (
+          R.draw_texture golden_burger
+            (int_of_float random_draw.x)
+            (int_of_float random_draw.y)
+            R.Color.raywhite;
+          if
+            R.check_collision_point_rec mouse_point
+              (R.Rectangle.create random_draw.x random_draw.y 70. 55.)
+          then
+            if R.is_mouse_button_down R.MouseButton.Left then (
+              if !state = 2 then (
+                state := 3;
+                R.draw_texture golden_burger_clicked
+                  (int_of_float random_draw.x)
+                  (int_of_float random_draw.y)
+                  R.Color.raywhite;
+                H.random_events random_stats burger_stats bps_mult click_mult;
+                random_draw.random_flag <- false))
+            else (
+              state := 2;
+              R.draw_texture golden_burger_hover
+                (int_of_float random_draw.x)
+                (int_of_float random_draw.y)
+                R.Color.raywhite))
+        else if H.Rand.int 100 = 1 then (
+          H.Rand.self_init ();
+          random_draw.x <- H.Rand.int 730 + 20 |> float_of_int;
+          random_draw.y <- H.Rand.int 350 + 115 |> float_of_int;
+          random_draw.random_flag <- true;
+          random_draw.despawn_timer <- 600))
+      else if random_stats.timer = -1 then (
+        burger_stats.bps <- burger_stats.bps / !bps_mult;
+        burger_stats.click_power <- burger_stats.click_power / !click_mult;
+        bps_mult := 1;
+        click_mult := 1;
+        random_stats.timer <- random_stats.timer + 1)
+      else random_stats.timer <- random_stats.timer + 1;
+
       if R.check_collision_point_rec mouse_point H.burger_hitbox then
         if R.is_mouse_button_down R.MouseButton.Left then (
           if !state = 2 then (
@@ -129,47 +189,6 @@ let rec loop texture =
         (1020, 579);
       hover_mechanics mouse_point buy_clicked buy_hover H.burger_wormhole_hitbox
         (1020, 649);
-
-      if random_stats.timer = 0 then (
-        random_draw.despawn_timer <- random_draw.despawn_timer - 1;
-        if random_draw.despawn_timer = 0 then random_draw.random_flag <- false;
-        if random_draw.random_flag then (
-          R.draw_texture golden_burger
-            (int_of_float random_draw.x)
-            (int_of_float random_draw.y)
-            R.Color.raywhite;
-          if
-            R.check_collision_point_rec mouse_point
-              (R.Rectangle.create random_draw.x random_draw.y 70. 55.)
-          then
-            if R.is_mouse_button_down R.MouseButton.Left then (
-              if !state = 2 then (
-                state := 3;
-                R.draw_texture burger_clicked
-                  (int_of_float random_draw.x)
-                  (int_of_float random_draw.y)
-                  R.Color.raywhite;
-                H.random_events random_stats burger_stats bps_mult click_mult;
-                random_draw.random_flag <- false))
-            else (
-              state := 2;
-              R.draw_texture burger_hover
-                (int_of_float random_draw.x)
-                (int_of_float random_draw.y)
-                R.Color.raywhite))
-        else if H.Rand.int 100 = 1 then (
-          H.Rand.self_init ();
-          random_draw.x <- H.Rand.int 730 + 20 |> float_of_int;
-          random_draw.y <- H.Rand.int 350 + 115 |> float_of_int;
-          random_draw.random_flag <- true;
-          random_draw.despawn_timer <- 600))
-      else if random_stats.timer = -1 then (
-        burger_stats.bps <- burger_stats.bps / !bps_mult;
-        burger_stats.click_power <- burger_stats.click_power / !click_mult;
-        bps_mult := 1;
-        click_mult := 1;
-        random_stats.timer <- random_stats.timer + 1)
-      else random_stats.timer <- random_stats.timer + 1;
 
       H.perm_upgrade price_list.sauce_price "sauce" mouse_point H.sauce_hitbox
         item_stats.sauce price_list.sauce_price burger_stats item_stats state
