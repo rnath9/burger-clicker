@@ -91,8 +91,7 @@ let rec loop texture =
       time := !time + 1;
       if !time = 60 then (
         time := 0;
-        H.increment_burger_bps burger_stats)
-      else ();
+        H.increment_burger_bps burger_stats);
       if R.is_mouse_button_down R.MouseButton.Left = false then state := 0;
       let mouse_point = R.get_mouse_position () in
       if R.check_collision_point_rec mouse_point H.burger_hitbox then
@@ -126,8 +125,6 @@ let rec loop texture =
             (int_of_float random_draw.x)
             (int_of_float random_draw.y)
             R.Color.raywhite;
-          if R.is_mouse_button_down R.MouseButton.Left = false then state := 0;
-          let mouse_point = R.get_mouse_position () in
           if
             R.check_collision_point_rec mouse_point
               (R.Rectangle.create random_draw.x random_draw.y 110. 85.)
@@ -150,7 +147,7 @@ let rec loop texture =
         else if H.Rand.int 100 = 1 then (
           H.Rand.self_init ();
           random_draw.x <- H.Rand.int 730 + 20 |> float_of_int;
-          random_draw.y <- H.Rand.int 300 + 115 |> float_of_int;
+          random_draw.y <- H.Rand.int 350 + 115 |> float_of_int;
           random_draw.random_flag <- true))
       else if random_stats.timer = -1 then (
         burger_stats.bps <- burger_stats.bps / !bps_mult;
