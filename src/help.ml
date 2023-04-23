@@ -9,7 +9,7 @@ type information = {
 
 (** [burger_init] initializes the game with 0 burgers, 0 burgers per second, 
     and 1 burger per click.*)
-let burger_init = { burgers = 0; bps = 0; click_power = 1 }
+let burger_init = { burgers = 500000; bps = 0; click_power = 1 }
 
 (** [increment_burger_click] increments the burger count by one click 
     in a given information type [t].*)
@@ -85,7 +85,7 @@ let item_init =
 let item_price_init =
   {
     sauce_price = 1000;
-    secret_sauce_price = 50000;
+    secret_sauce_price = 500000;
     spatula_price = 15;
     grilling_dad_price = 100;
     burger_tree_price = 1500;

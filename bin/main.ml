@@ -57,13 +57,11 @@ let shop (price : int) (item : string) mouse hitbox =
         H.increment_item item_stats item price_list;
         H.increment_bps burger_stats item)
 
-let perm_upgrade (price : int) (item : string) mouse hitbox purchased =
+let perm_upgrade (price : int) (item : string) mouse hitbox purchased pr =
   if R.check_collision_point_rec mouse hitbox then
     if R.is_mouse_button_down R.MouseButton.Left then
-      if
-        !state = 0 && burger_stats.burgers > price_list.sauce_price && purchased
-      then (
-        state := 1;
+      if !state = 6 && burger_stats.burgers > pr && purchased then (
+        state := 4;
         H.decrease_burger_spend burger_stats price;
         H.increment_item item_stats item price_list;
         H.increment_click_power burger_stats 10)
@@ -73,13 +71,17 @@ let hover_mechanics mouse buy_clicked buy_hover hitbox coord =
     if R.is_mouse_button_down R.MouseButton.Left then (
       if !state = 5 then (
         state := 6;
-        R.draw_texture buy_clicked (fst coord) (snd coord) R.Color.raywhite;
-        H.increment_burger_click burger_stats))
+        R.draw_texture buy_clicked (fst coord) (snd coord) R.Color.raywhite))
     else (
       state := 5;
       R.draw_texture buy_hover (fst coord) (snd coord) R.Color.raywhite)
 
-let text_draw num x y color size = R.draw_text num x y size color
+(* let text_draw text x y color size = R.draw_text text x y size color *)
+
+let text_draw text x y color size =
+  R.draw_text_ex (R.get_font_default ()) text
+    (R.Vector2.create (float_of_int x) (float_of_int y))
+    (float_of_int size) 5. color
 
 let rec loop texture =
   let bg, burger, burger_hover, burger_clicked, buy, buy_hover, buy_clicked =
@@ -108,7 +110,6 @@ let rec loop texture =
       if R.is_mouse_button_down R.MouseButton.Left = false then state := 0;
       let mouse_point = R.get_mouse_position () in
       if R.check_collision_point_rec mouse_point H.burger_hitbox then
-        (*we can even switch the burger to look like you've hovered over it!*)
         if R.is_mouse_button_down R.MouseButton.Left then (
           if !state = 2 then (
             state := 3;
@@ -117,7 +118,6 @@ let rec loop texture =
         else (
           state := 2;
           R.draw_texture burger_hover 375 293 R.Color.raywhite);
-      (*secret sauce hover*)
       hover_mechanics mouse_point buy_clicked buy_hover H.sauce_hitbox (880, 222);
       hover_mechanics mouse_point buy_clicked buy_hover H.secret_sauce_hitbox
         (1005, 222);
@@ -134,12 +134,12 @@ let rec loop texture =
       hover_mechanics mouse_point buy_clicked buy_hover H.burger_wormhole_hitbox
         (1020, 649);
 
-      (*sauce hover*)
       perm_upgrade price_list.sauce_price "sauce" mouse_point H.sauce_hitbox
-        item_stats.sauce;
+        item_stats.sauce price_list.sauce_price;
 
       perm_upgrade price_list.secret_sauce_price "secret sauce" mouse_point
-        H.secret_sauce_hitbox item_stats.secret_sauce;
+        H.secret_sauce_hitbox item_stats.secret_sauce
+        price_list.secret_sauce_price;
 
       shop price_list.spatula_price "spatula" mouse_point H.spatula_hitbox;
 
