@@ -18,19 +18,19 @@ let time = ref 0
 let setup () =
   R.init_window 1120 700 "Burger Clicker";
   R.set_target_fps 60;
-  let bg_image = R.load_image "RescaledBurgerBackground.png" in
+  let bg_image = R.load_image "images/RescaledBurgerBackground.png" in
   let bg_texture = R.load_texture_from_image bg_image in
   R.unload_image bg_image;
-  let burger_image = R.load_image "Transparent_Burger.png" in
+  let burger_image = R.load_image "images/Transparent_Burger.png" in
   let burger_texture = R.load_texture_from_image burger_image in
   R.unload_image burger_image;
-  let buy_image = R.load_image "Buy.png" in
+  let buy_image = R.load_image "images/Buy.png" in
   let buy_texture = R.load_texture_from_image buy_image in
   R.unload_image buy_image;
-  let buy_hover_image = R.load_image "Buy_hover.png" in
+  let buy_hover_image = R.load_image "images/Buy_hover.png" in
   let buy_hover_texture = R.load_texture_from_image buy_hover_image in
   R.unload_image buy_hover_image;
-  let buy_clicked_image = R.load_image "Buy_clicked.png" in
+  let buy_clicked_image = R.load_image "images/Buy_clicked.png" in
   let buy_clicked_texture = R.load_texture_from_image buy_clicked_image in
   R.unload_image buy_clicked_image;
 
