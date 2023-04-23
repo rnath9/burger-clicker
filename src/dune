@@ -1,3 +1,4 @@
 (library
  (name help)
- (libraries raylib))
+ (libraries raylib)
+ (public_name Helper))

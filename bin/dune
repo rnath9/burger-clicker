@@ -7,4 +7,5 @@
   raylib
   camlimages.png
   camlimages.graphics
-  camlimages.jpeg))
+  camlimages.jpeg)
+ (public_name Main))
