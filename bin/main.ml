@@ -33,9 +33,17 @@ let setup () =
   let buy_clicked_image = R.load_image "images/Buy_clicked.png" in
   let buy_clicked_texture = R.load_texture_from_image buy_clicked_image in
   R.unload_image buy_clicked_image;
+  let burger_hover_image = R.load_image "images/WhopperHighlight.png" in
+  let burger_hover_texture = R.load_texture_from_image burger_hover_image in
+  R.unload_image burger_hover_image;
+  let burger_clicked_image = R.load_image "images/WhopperClicked.png" in
+  let burger_clicked_texture = R.load_texture_from_image burger_clicked_image in
+  R.unload_image burger_clicked_image;
 
   ( bg_texture,
     burger_texture,
+    burger_hover_texture,
+    burger_clicked_texture,
     buy_texture,
     buy_hover_texture,
     buy_clicked_texture )
@@ -74,7 +82,9 @@ let hover_mechanics mouse buy_clicked buy_hover hitbox coord =
 let text_draw num x y color size = R.draw_text num x y size color
 
 let rec loop texture =
-  let bg, burger, buy, buy_hover, buy_clicked = texture in
+  let bg, burger, burger_hover, burger_clicked, buy, buy_hover, buy_clicked =
+    texture
+  in
   match R.window_should_close () with
   | true -> R.close_window ()
   | _ ->
@@ -99,10 +109,14 @@ let rec loop texture =
       let mouse_point = R.get_mouse_position () in
       if R.check_collision_point_rec mouse_point H.burger_hitbox then
         (*we can even switch the burger to look like you've hovered over it!*)
-        if R.is_mouse_button_down R.MouseButton.Left then
-          if !state = 0 then (
-            state := 1;
-            H.increment_burger_click burger_stats);
+        if R.is_mouse_button_down R.MouseButton.Left then (
+          if !state = 2 then (
+            state := 3;
+            R.draw_texture burger_clicked 375 293 R.Color.raywhite;
+            H.increment_burger_click burger_stats))
+        else (
+          state := 2;
+          R.draw_texture burger_hover 375 293 R.Color.raywhite);
       (*secret sauce hover*)
       hover_mechanics mouse_point buy_clicked buy_hover H.sauce_hitbox (880, 222);
       hover_mechanics mouse_point buy_clicked buy_hover H.secret_sauce_hitbox
