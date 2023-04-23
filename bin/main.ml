@@ -4,9 +4,15 @@ module H = Help
 let burger_stats = H.burger_init
 let item_stats = H.item_init
 let price_list = H.item_price_init
-
-(*move state to stats later*)
 let state = ref 0
+
+(*state: 0 mouse up
+  state: 1 mouse hover over burger
+  state: 2 mouse pressed over burger
+  state: 3 mouse released over burger
+  state: 4 mouse hover over buy button
+  state: 5 mouse pressed buy button
+  state: 6 mouse released buy button *)
 let time = ref 0
 
 let setup () =
@@ -21,13 +27,24 @@ let setup () =
   let buy_image = R.load_image "Buy.png" in
   let buy_texture = R.load_texture_from_image buy_image in
   R.unload_image buy_image;
-  (bg_texture, burger_texture, buy_texture)
+  let buy_hover_image = R.load_image "Buy_hover.png" in
+  let buy_hover_texture = R.load_texture_from_image buy_hover_image in
+  R.unload_image buy_hover_image;
+  let buy_clicked_image = R.load_image "Buy_clicked.png" in
+  let buy_clicked_texture = R.load_texture_from_image buy_clicked_image in
+  R.unload_image buy_clicked_image;
+
+  ( bg_texture,
+    burger_texture,
+    buy_texture,
+    buy_hover_texture,
+    buy_clicked_texture )
 
 let shop (price : int) (item : string) mouse hitbox =
   if R.check_collision_point_rec mouse hitbox then
     if R.is_mouse_button_down R.MouseButton.Left then
-      if !state = 0 && burger_stats.burgers > price then (
-        state := 1;
+      if !state = 6 && burger_stats.burgers > price then (
+        state := 4;
         H.decrease_burger_spend burger_stats price;
         H.increment_item item_stats item price_list;
         H.increment_bps burger_stats item)
@@ -43,10 +60,21 @@ let perm_upgrade (price : int) (item : string) mouse hitbox purchased =
         H.increment_item item_stats item price_list;
         H.increment_click_power burger_stats 10)
 
+let hover_mechanics mouse buy_clicked buy_hover hitbox coord =
+  if R.check_collision_point_rec mouse hitbox then
+    if R.is_mouse_button_down R.MouseButton.Left then (
+      if !state = 5 then (
+        state := 6;
+        R.draw_texture buy_clicked (fst coord) (snd coord) R.Color.raywhite;
+        H.increment_burger_click burger_stats))
+    else (
+      state := 5;
+      R.draw_texture buy_hover (fst coord) (snd coord) R.Color.raywhite)
+
 let text_draw num x y color size = R.draw_text num x y size color
 
 let rec loop texture =
-  let bg, burger, buy = texture in
+  let bg, burger, buy, buy_hover, buy_clicked = texture in
   match R.window_should_close () with
   | true -> R.close_window ()
   | _ ->
@@ -75,7 +103,24 @@ let rec loop texture =
           if !state = 0 then (
             state := 1;
             H.increment_burger_click burger_stats);
+      (*secret sauce hover*)
+      hover_mechanics mouse_point buy_clicked buy_hover H.sauce_hitbox (880, 222);
+      hover_mechanics mouse_point buy_clicked buy_hover H.secret_sauce_hitbox
+        (1005, 222);
+      hover_mechanics mouse_point buy_clicked buy_hover H.spatula_hitbox
+        (1020, 299);
+      hover_mechanics mouse_point buy_clicked buy_hover H.grilling_dad_hitbox
+        (1020, 369);
+      hover_mechanics mouse_point buy_clicked buy_hover H.burger_tree_hitbox
+        (1020, 439);
+      hover_mechanics mouse_point buy_clicked buy_hover H.food_truck_hitbox
+        (1020, 509);
+      hover_mechanics mouse_point buy_clicked buy_hover H.burger_lab_hitbox
+        (1020, 579);
+      hover_mechanics mouse_point buy_clicked buy_hover H.burger_wormhole_hitbox
+        (1020, 649);
 
+      (*sauce hover*)
       perm_upgrade price_list.sauce_price "sauce" mouse_point H.sauce_hitbox
         item_stats.sauce;
 

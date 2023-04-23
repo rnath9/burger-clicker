@@ -6,7 +6,7 @@ type information = {
   mutable click_power : int;
 }
 
-let burger_init = { burgers = 1000000000000000; bps = 0; click_power = 1 }
+let burger_init = { burgers = 500000; bps = 0; click_power = 1 }
 let increment_burger_click t = t.burgers <- t.burgers + t.click_power
 let decrease_burger_spend t price = t.burgers <- t.burgers - price
 
