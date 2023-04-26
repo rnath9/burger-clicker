@@ -49,8 +49,8 @@ let increase_price (price : int) =
     using [increase_price]*)
 let increment_item p item (pr : prices) =
   match item with
-  | "sauce" -> p.sauce <- false
-  | "secret sauce" -> p.secret_sauce <- false
+  | "sauce" -> p.sauce <- 1
+  | "secret sauce" -> p.secret_sauce <- 1
   | "spatula" ->
       p.spatula <-
         (pr.spatula_price <- pr.spatula_price |> increase_price;
@@ -114,7 +114,7 @@ let perm_upgrade (price : int) (item : string) mouse hitbox purchased pr
     burger_stats item_stats state price_list =
   if R.check_collision_point_rec mouse hitbox then
     if R.is_mouse_button_down R.MouseButton.Left then
-      if !state = 6 && burger_stats.burgers > pr && purchased then (
+      if !state = 6 && burger_stats.burgers > pr && purchased = 0 then (
         state := 4;
         decrease_burger_spend burger_stats price;
         increment_item item_stats item price_list;
@@ -128,7 +128,7 @@ let animate_text (animation : animation) (text : string) =
 let random_events (random_stats : random_stats) burger_stats bps_mult click_mult
     =
   if random_stats.timer = 0 then
-    match Rand.int 3 with
+    match Rand.int 4 with
     | 0 ->
         let burger_gift = Randomevent.burger_gift burger_stats.burgers in
         animate_text animation ("BURGER GIFT! + " ^ string_of_int burger_gift);
@@ -145,6 +145,14 @@ let random_events (random_stats : random_stats) burger_stats bps_mult click_mult
           ("CLICK BOOST! " ^ string_of_int !click_mult ^ "X MORE EFFICIENCY");
         burger_stats.click_power <- !click_mult * burger_stats.click_power;
         Randomevent.generate_timer random_stats
+    | 3 ->
+        animate_text animation
+          (match Rand.int 5 with
+          | 0 -> "Try Clicking the Right Burger"
+          | 1 -> "Why Are You Still Playing?"
+          | 2 -> "You're Playing the Music Right?"
+          | 3 -> "Think About All the Dead Cows"
+          | _ -> "*Wet Meat Noises*")
     | _ -> failwith "random event error"
 
 let facilitate_events golden_burger golden_burger_clicked golden_burger_hover
@@ -176,10 +184,10 @@ let facilitate_events golden_burger golden_burger_clicked golden_burger_hover
             (int_of_float random_draw.x)
             (int_of_float random_draw.y)
             R.Color.raywhite))
-    else if Rand.int 100 = 1 then (
+    else if Rand.int random_stats.chance = 1 then (
       Rand.self_init ();
       random_draw.x <- Rand.int 730 + 20 |> float_of_int;
-      random_draw.y <- Rand.int 350 + 115 |> float_of_int;
+      random_draw.y <- Rand.int 375 + 115 |> float_of_int;
       random_draw.random_flag <- true;
       random_draw.despawn_timer <- 600))
   else if random_stats.timer = -1 then (

@@ -15,8 +15,8 @@ type random_stats = {
 (**[powerups] contains the number of powerups a user has.*)
 
 type powerups = {
-  mutable sauce : bool;
-  mutable secret_sauce : bool;
+  mutable sauce : int;
+  mutable secret_sauce : int;
   mutable spatula : int;
   mutable grilling_dad : int;
   mutable burger_tree : int;
@@ -51,8 +51,8 @@ type random_event_draw = {
       the game*)
 let item_init =
   {
-    sauce = true;
-    secret_sauce = true;
+    sauce = 0;
+    secret_sauce = 0;
     spatula = 0;
     grilling_dad = 0;
     burger_tree = 0;
