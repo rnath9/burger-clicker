@@ -66,8 +66,30 @@ let help_tests =
     test_incr_click_pwr "incrementing click power"
       { burgers = 10000; bps = 100; click_power = 2 }
       2 4;
-    test_incr_item "incrementing burger dads" item_init "grilling dad"
-      item_price_init
+    (let items = item_init in
+     let prices = item_price_init in
+     test_incr_item "incrementing grilling dads" items "grilling dad" prices
+       {
+         sauce = 0;
+         secret_sauce = 0;
+         spatula = 0;
+         grilling_dad = 1;
+         burger_tree = 0;
+         food_truck = 0;
+         burger_lab = 0;
+         burger_wormhole = 0;
+       }
+       {
+         sauce_price = 1000;
+         secret_sauce_price = 500000;
+         spatula_price = 15;
+         grilling_dad_price = 133;
+         burger_tree_price = 1500;
+         food_truck_price = 10000;
+         burger_lab_price = 100000;
+         burger_wormhole_price = 1000000;
+       });
+    test_incr_item "incrementing spatulas"
       {
         sauce = 0;
         secret_sauce = 0;
@@ -78,6 +100,7 @@ let help_tests =
         burger_lab = 0;
         burger_wormhole = 0;
       }
+      "spatula"
       {
         sauce_price = 1000;
         secret_sauce_price = 500000;
@@ -87,6 +110,194 @@ let help_tests =
         food_truck_price = 10000;
         burger_lab_price = 100000;
         burger_wormhole_price = 1000000;
+      }
+      {
+        sauce = 0;
+        secret_sauce = 0;
+        spatula = 1;
+        grilling_dad = 1;
+        burger_tree = 0;
+        food_truck = 0;
+        burger_lab = 0;
+        burger_wormhole = 0;
+      }
+      {
+        sauce_price = 1000;
+        secret_sauce_price = 500000;
+        spatula_price = 19;
+        grilling_dad_price = 133;
+        burger_tree_price = 1500;
+        food_truck_price = 10000;
+        burger_lab_price = 100000;
+        burger_wormhole_price = 1000000;
+      };
+    test_incr_item "incrementing burger tree"
+      {
+        sauce = 0;
+        secret_sauce = 0;
+        spatula = 0;
+        grilling_dad = 0;
+        burger_tree = 0;
+        food_truck = 0;
+        burger_lab = 0;
+        burger_wormhole = 0;
+      }
+      "burger tree"
+      {
+        sauce_price = 1000;
+        secret_sauce_price = 500000;
+        spatula_price = 15;
+        grilling_dad_price = 100;
+        burger_tree_price = 1500;
+        food_truck_price = 10000;
+        burger_lab_price = 100000;
+        burger_wormhole_price = 1000000;
+      }
+      {
+        sauce = 0;
+        secret_sauce = 0;
+        spatula = 0;
+        grilling_dad = 0;
+        burger_tree = 1;
+        food_truck = 0;
+        burger_lab = 0;
+        burger_wormhole = 0;
+      }
+      {
+        sauce_price = 1000;
+        secret_sauce_price = 500000;
+        spatula_price = 15;
+        grilling_dad_price = 100;
+        burger_tree_price = 1995;
+        food_truck_price = 10000;
+        burger_lab_price = 100000;
+        burger_wormhole_price = 1000000;
+      };
+    test_incr_item "incrementing food truck"
+      {
+        sauce = 0;
+        secret_sauce = 0;
+        spatula = 0;
+        grilling_dad = 0;
+        burger_tree = 0;
+        food_truck = 0;
+        burger_lab = 0;
+        burger_wormhole = 0;
+      }
+      "food truck"
+      {
+        sauce_price = 1000;
+        secret_sauce_price = 500000;
+        spatula_price = 15;
+        grilling_dad_price = 100;
+        burger_tree_price = 1500;
+        food_truck_price = 10000;
+        burger_lab_price = 100000;
+        burger_wormhole_price = 1000000;
+      }
+      {
+        sauce = 0;
+        secret_sauce = 0;
+        spatula = 0;
+        grilling_dad = 0;
+        burger_tree = 0;
+        food_truck = 1;
+        burger_lab = 0;
+        burger_wormhole = 0;
+      }
+      {
+        sauce_price = 1000;
+        secret_sauce_price = 500000;
+        spatula_price = 15;
+        grilling_dad_price = 100;
+        burger_tree_price = 1500;
+        food_truck_price = 13300;
+        burger_lab_price = 100000;
+        burger_wormhole_price = 1000000;
+      };
+    test_incr_item "incrementing burger lab"
+      {
+        sauce = 0;
+        secret_sauce = 0;
+        spatula = 0;
+        grilling_dad = 0;
+        burger_tree = 0;
+        food_truck = 0;
+        burger_lab = 0;
+        burger_wormhole = 0;
+      }
+      "burger lab"
+      {
+        sauce_price = 1000;
+        secret_sauce_price = 500000;
+        spatula_price = 15;
+        grilling_dad_price = 100;
+        burger_tree_price = 1500;
+        food_truck_price = 10000;
+        burger_lab_price = 100000;
+        burger_wormhole_price = 1000000;
+      }
+      {
+        sauce = 0;
+        secret_sauce = 0;
+        spatula = 0;
+        grilling_dad = 0;
+        burger_tree = 0;
+        food_truck = 0;
+        burger_lab = 1;
+        burger_wormhole = 0;
+      }
+      {
+        sauce_price = 1000;
+        secret_sauce_price = 500000;
+        spatula_price = 15;
+        grilling_dad_price = 100;
+        burger_tree_price = 1500;
+        food_truck_price = 10000;
+        burger_lab_price = 133000;
+        burger_wormhole_price = 1000000;
+      };
+    test_incr_item "incrementing burger wormhole"
+      {
+        sauce = 0;
+        secret_sauce = 0;
+        spatula = 0;
+        grilling_dad = 0;
+        burger_tree = 0;
+        food_truck = 0;
+        burger_lab = 0;
+        burger_wormhole = 0;
+      }
+      "burger wormhole"
+      {
+        sauce_price = 1000;
+        secret_sauce_price = 500000;
+        spatula_price = 15;
+        grilling_dad_price = 100;
+        burger_tree_price = 1500;
+        food_truck_price = 10000;
+        burger_lab_price = 100000;
+        burger_wormhole_price = 1000000;
+      }
+      {
+        sauce = 0;
+        secret_sauce = 0;
+        spatula = 0;
+        grilling_dad = 0;
+        burger_tree = 0;
+        food_truck = 0;
+        burger_lab = 0;
+        burger_wormhole = 1;
+      }
+      {
+        sauce_price = 1000;
+        secret_sauce_price = 500000;
+        spatula_price = 15;
+        grilling_dad_price = 100;
+        burger_tree_price = 1500;
+        food_truck_price = 10000;
+        burger_lab_price = 100000;
+        burger_wormhole_price = 1330000;
       };
     test_truncate "no truncation needed" 10. suffix_array "10";
     test_truncate "truncation needed" 103400000. suffix_array "103.40M";
