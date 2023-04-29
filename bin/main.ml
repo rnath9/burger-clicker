@@ -7,6 +7,7 @@ let price_list = H.item_price_init
 let bps_mult = ref 1
 let click_mult = ref 1
 let state = ref 0
+let won_game = ref false
 
 (*state: 0 mouse up
   state: 1 mouse hover over burger
@@ -97,123 +98,154 @@ let rec loop frames_per_update texture =
   in
   match R.window_should_close () with
   | true -> R.close_window ()
-  | _ ->
-      R.begin_drawing ();
-      R.clear_background R.Color.raywhite;
-      R.draw_texture bg 0 0 R.Color.raywhite;
-      R.draw_texture burger 375 293 R.Color.raywhite;
-      R.draw_texture buy 1005 222 R.Color.raywhite;
-      R.draw_texture buy 880 222 R.Color.raywhite;
-      R.draw_texture buy 1020 299 R.Color.raywhite;
-      R.draw_texture buy 1020 369 R.Color.raywhite;
-      R.draw_texture buy 1020 439 R.Color.raywhite;
-      R.draw_texture buy 1020 509 R.Color.raywhite;
-      R.draw_texture buy 1020 579 R.Color.raywhite;
-      R.draw_texture buy 1020 649 R.Color.raywhite;
-      time := !time + 1;
-      if !time = 60 then time := 0;
-      if !time mod frames_per_update = 0 then
-        H.increment_burger_bps burger_stats frames_per_update;
-      if R.is_mouse_button_down R.MouseButton.Left = false then state := 0;
-      let mouse_point = R.get_mouse_position () in
-      H.facilitate_events golden_burger golden_burger_clicked
-        golden_burger_hover mouse_point state burger_stats bps_mult click_mult;
+  | _ -> (
+      match !won_game with
+      | false ->
+          R.begin_drawing ();
+          R.clear_background R.Color.raywhite;
+          R.draw_texture bg 0 0 R.Color.raywhite;
+          R.draw_texture burger 375 293 R.Color.raywhite;
+          R.draw_texture buy 1005 222 R.Color.raywhite;
+          R.draw_texture buy 880 222 R.Color.raywhite;
+          R.draw_texture buy 1020 299 R.Color.raywhite;
+          R.draw_texture buy 1020 369 R.Color.raywhite;
+          R.draw_texture buy 1020 439 R.Color.raywhite;
+          R.draw_texture buy 1020 509 R.Color.raywhite;
+          R.draw_texture buy 1020 579 R.Color.raywhite;
+          R.draw_texture buy 1020 649 R.Color.raywhite;
+          time := !time + 1;
+          if !time = 60 then time := 0;
+          if !time mod frames_per_update = 0 then
+            H.increment_burger_bps burger_stats frames_per_update;
+          if R.is_mouse_button_down R.MouseButton.Left = false then state := 0;
+          let mouse_point = R.get_mouse_position () in
+          H.facilitate_events golden_burger golden_burger_clicked
+            golden_burger_hover mouse_point state burger_stats bps_mult
+            click_mult;
 
-      if R.check_collision_point_rec mouse_point H.burger_hitbox then
-        if R.is_mouse_button_down R.MouseButton.Left then (
-          if !state = 2 then (
-            state := 3;
-            R.draw_texture burger_clicked 375 293 R.Color.raywhite;
-            H.increment_burger_click burger_stats))
-        else (
-          state := 2;
-          R.draw_texture burger_hover 375 293 R.Color.raywhite);
-      hover_mechanics mouse_point buy_clicked buy_hover H.sauce_hitbox (880, 222);
-      hover_mechanics mouse_point buy_clicked buy_hover H.secret_sauce_hitbox
-        (1005, 222);
-      hover_mechanics mouse_point buy_clicked buy_hover H.spatula_hitbox
-        (1020, 299);
-      hover_mechanics mouse_point buy_clicked buy_hover H.grilling_dad_hitbox
-        (1020, 369);
-      hover_mechanics mouse_point buy_clicked buy_hover H.burger_tree_hitbox
-        (1020, 439);
-      hover_mechanics mouse_point buy_clicked buy_hover H.food_truck_hitbox
-        (1020, 509);
-      hover_mechanics mouse_point buy_clicked buy_hover H.burger_lab_hitbox
-        (1020, 579);
-      hover_mechanics mouse_point buy_clicked buy_hover H.burger_wormhole_hitbox
-        (1020, 649);
+          if R.check_collision_point_rec mouse_point H.burger_hitbox then
+            if R.is_mouse_button_down R.MouseButton.Left then (
+              if !state = 2 then (
+                state := 3;
+                R.draw_texture burger_clicked 375 293 R.Color.raywhite;
+                H.increment_burger_click burger_stats))
+            else (
+              state := 2;
+              R.draw_texture burger_hover 375 293 R.Color.raywhite);
+          hover_mechanics mouse_point buy_clicked buy_hover H.sauce_hitbox
+            (880, 222);
+          hover_mechanics mouse_point buy_clicked buy_hover
+            H.secret_sauce_hitbox (1005, 222);
+          hover_mechanics mouse_point buy_clicked buy_hover H.spatula_hitbox
+            (1020, 299);
+          hover_mechanics mouse_point buy_clicked buy_hover
+            H.grilling_dad_hitbox (1020, 369);
+          hover_mechanics mouse_point buy_clicked buy_hover H.burger_tree_hitbox
+            (1020, 439);
+          hover_mechanics mouse_point buy_clicked buy_hover H.food_truck_hitbox
+            (1020, 509);
+          hover_mechanics mouse_point buy_clicked buy_hover H.burger_lab_hitbox
+            (1020, 579);
+          hover_mechanics mouse_point buy_clicked buy_hover
+            H.burger_wormhole_hitbox (1020, 649);
 
-      H.perm_upgrade price_list.sauce_price "sauce" mouse_point H.sauce_hitbox
-        item_stats.sauce price_list.sauce_price burger_stats item_stats state
-        price_list;
+          H.perm_upgrade price_list.sauce_price "sauce" mouse_point
+            H.sauce_hitbox item_stats.sauce price_list.sauce_price burger_stats
+            item_stats state price_list;
 
-      H.perm_upgrade price_list.secret_sauce_price "secret sauce" mouse_point
-        H.secret_sauce_hitbox item_stats.secret_sauce
-        price_list.secret_sauce_price burger_stats item_stats state price_list;
+          H.perm_upgrade price_list.secret_sauce_price "secret sauce"
+            mouse_point H.secret_sauce_hitbox item_stats.secret_sauce
+            price_list.secret_sauce_price burger_stats item_stats state
+            price_list;
 
-      H.shop price_list.spatula_price "spatula" mouse_point H.spatula_hitbox
-        burger_stats item_stats state price_list bps_mult;
+          H.shop price_list.spatula_price "spatula" mouse_point H.spatula_hitbox
+            burger_stats item_stats state price_list bps_mult;
 
-      H.shop price_list.grilling_dad_price "grilling dad" mouse_point
-        H.grilling_dad_hitbox burger_stats item_stats state price_list bps_mult;
+          H.shop price_list.grilling_dad_price "grilling dad" mouse_point
+            H.grilling_dad_hitbox burger_stats item_stats state price_list
+            bps_mult;
 
-      H.shop price_list.burger_tree_price "burger tree" mouse_point
-        H.burger_tree_hitbox burger_stats item_stats state price_list bps_mult;
+          H.shop price_list.burger_tree_price "burger tree" mouse_point
+            H.burger_tree_hitbox burger_stats item_stats state price_list
+            bps_mult;
 
-      H.shop price_list.food_truck_price "food truck" mouse_point
-        H.food_truck_hitbox burger_stats item_stats state price_list bps_mult;
+          H.shop price_list.food_truck_price "food truck" mouse_point
+            H.food_truck_hitbox burger_stats item_stats state price_list
+            bps_mult;
 
-      H.shop price_list.burger_lab_price "burger lab" mouse_point
-        H.burger_lab_hitbox burger_stats item_stats state price_list bps_mult;
+          H.shop price_list.burger_lab_price "burger lab" mouse_point
+            H.burger_lab_hitbox burger_stats item_stats state price_list
+            bps_mult;
 
-      H.shop price_list.burger_wormhole_price "burger wormhole" mouse_point
-        H.burger_wormhole_hitbox burger_stats item_stats state price_list
-        bps_mult;
+          H.shop price_list.burger_wormhole_price "burger wormhole" mouse_point
+            H.burger_wormhole_hitbox burger_stats item_stats state price_list
+            bps_mult;
 
-      H.text_draw
-        (H.truncate burger_stats.burgers H.suffix_array)
-        505 20 H.font_color 100;
+          H.text_draw
+            (H.truncate burger_stats.burgers H.suffix_array)
+            505 20 H.font_color 100;
 
-      H.text_draw
-        (H.truncate (float_of_int burger_stats.bps) H.suffix_array)
-        400 110 H.font_color 40;
+          H.text_draw
+            (H.truncate (float_of_int burger_stats.bps) H.suffix_array)
+            400 110 H.font_color 40;
 
-      H.text_draw
-        (H.truncate (float_of_int price_list.spatula_price) H.suffix_array)
-        910 305 H.price_color 35;
-      H.text_draw
-        (H.truncate (float_of_int price_list.grilling_dad_price) H.suffix_array)
-        910 375 H.price_color 35;
-      H.text_draw
-        (H.truncate (float_of_int price_list.burger_tree_price) H.suffix_array)
-        910 445 H.price_color 35;
-      H.text_draw
-        (H.truncate (float_of_int price_list.food_truck_price) H.suffix_array)
-        910 515 H.price_color 35;
-      H.text_draw
-        (H.truncate (float_of_int price_list.burger_lab_price) H.suffix_array)
-        910 585 H.price_color 35;
-      H.text_draw
-        (H.truncate
-           (float_of_int price_list.burger_wormhole_price)
-           H.suffix_array)
-        910 655 H.price_color 35;
+          H.text_draw
+            (H.truncate (float_of_int price_list.spatula_price) H.suffix_array)
+            910 305 H.price_color 35;
+          H.text_draw
+            (H.truncate
+               (float_of_int price_list.grilling_dad_price)
+               H.suffix_array)
+            910 375 H.price_color 35;
+          H.text_draw
+            (H.truncate
+               (float_of_int price_list.burger_tree_price)
+               H.suffix_array)
+            910 445 H.price_color 35;
+          H.text_draw
+            (H.truncate
+               (float_of_int price_list.food_truck_price)
+               H.suffix_array)
+            910 515 H.price_color 35;
+          H.text_draw
+            (H.truncate
+               (float_of_int price_list.burger_lab_price)
+               H.suffix_array)
+            910 585 H.price_color 35;
+          H.text_draw
+            (H.truncate
+               (float_of_int price_list.burger_wormhole_price)
+               H.suffix_array)
+            910 655 H.price_color 35;
 
-      H.text_draw (string_of_int item_stats.spatula) 165 558 H.font_color 50;
-      H.text_draw
-        (string_of_int item_stats.grilling_dad)
-        165 643 H.font_color 50;
-      H.text_draw (string_of_int item_stats.burger_tree) 365 558 H.font_color 50;
-      H.text_draw (string_of_int item_stats.food_truck) 365 643 H.font_color 50;
-      H.text_draw (string_of_int item_stats.burger_lab) 600 558 H.font_color 50;
-      H.text_draw
-        (string_of_int item_stats.burger_wormhole)
-        600 643 H.font_color 50;
+          H.text_draw (string_of_int item_stats.spatula) 165 558 H.font_color 50;
+          H.text_draw
+            (string_of_int item_stats.grilling_dad)
+            165 643 H.font_color 50;
+          H.text_draw
+            (string_of_int item_stats.burger_tree)
+            365 558 H.font_color 50;
+          H.text_draw
+            (string_of_int item_stats.food_truck)
+            365 643 H.font_color 50;
+          H.text_draw
+            (string_of_int item_stats.burger_lab)
+            600 558 H.font_color 50;
+          H.text_draw
+            (string_of_int item_stats.burger_wormhole)
+            600 643 H.font_color 50;
 
-      H.animate_random ();
-      (* R.draw_fps 250 250; *)
-      R.end_drawing ();
-      loop frames_per_update texture
+          H.animate_random ();
+          (* R.draw_fps 250 250; *)
+          if burger_stats.burgers > 5.0 then won_game := true;
+          R.end_drawing ();
+          loop frames_per_update texture
+      | true ->
+          R.begin_drawing ();
+          R.clear_background R.Color.white;
+          R.draw_fps 200 200;
+          R.draw_texture bg 0 0 R.Color.white;
+          R.end_drawing ();
+          loop frames_per_update texture)
 
 let () = setup () |> loop 5
