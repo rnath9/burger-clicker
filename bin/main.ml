@@ -173,43 +173,43 @@ let rec loop frames_per_update texture =
 
       H.text_draw
         (H.truncate burger_stats.burgers H.suffix_array)
-        505 15 H.font_color 100;
+        505 20 H.font_color 100;
 
       H.text_draw
         (H.truncate (float_of_int burger_stats.bps) H.suffix_array)
-        400 105 H.font_color 40;
+        400 110 H.font_color 40;
 
       H.text_draw
         (H.truncate (float_of_int price_list.spatula_price) H.suffix_array)
-        910 302 H.price_color 35;
+        910 305 H.price_color 35;
       H.text_draw
         (H.truncate (float_of_int price_list.grilling_dad_price) H.suffix_array)
-        910 372 H.price_color 35;
+        910 375 H.price_color 35;
       H.text_draw
         (H.truncate (float_of_int price_list.burger_tree_price) H.suffix_array)
-        910 442 H.price_color 35;
+        910 445 H.price_color 35;
       H.text_draw
         (H.truncate (float_of_int price_list.food_truck_price) H.suffix_array)
-        910 512 H.price_color 35;
+        910 515 H.price_color 35;
       H.text_draw
         (H.truncate (float_of_int price_list.burger_lab_price) H.suffix_array)
-        910 582 H.price_color 35;
+        910 585 H.price_color 35;
       H.text_draw
         (H.truncate
            (float_of_int price_list.burger_wormhole_price)
            H.suffix_array)
-        910 652 H.price_color 35;
+        910 655 H.price_color 35;
 
-      H.text_draw (string_of_int item_stats.spatula) 165 555 H.font_color 50;
+      H.text_draw (string_of_int item_stats.spatula) 165 558 H.font_color 50;
       H.text_draw
         (string_of_int item_stats.grilling_dad)
-        165 640 H.font_color 50;
-      H.text_draw (string_of_int item_stats.burger_tree) 365 555 H.font_color 50;
-      H.text_draw (string_of_int item_stats.food_truck) 365 640 H.font_color 50;
-      H.text_draw (string_of_int item_stats.burger_lab) 600 555 H.font_color 50;
+        165 643 H.font_color 50;
+      H.text_draw (string_of_int item_stats.burger_tree) 365 558 H.font_color 50;
+      H.text_draw (string_of_int item_stats.food_truck) 365 643 H.font_color 50;
+      H.text_draw (string_of_int item_stats.burger_lab) 600 558 H.font_color 50;
       H.text_draw
         (string_of_int item_stats.burger_wormhole)
-        600 640 H.font_color 50;
+        600 643 H.font_color 50;
 
       H.animate_random ();
       (* R.draw_fps 250 250; *)

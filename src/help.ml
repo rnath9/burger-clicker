@@ -3,7 +3,7 @@ include Randomevent
 
 (** [burger_init] initializes the game with 0 burgers, 0 burgers per second, 
     and 1 burger per click.*)
-let burger_init = { burgers = 1000.; bps = 0; click_power = 1 }
+let burger_init = { burgers = 0.; bps = 0; click_power = 1 }
 
 (** [increment_burger_click] increments the burger count by one click 
     in a given information type [t].*)
@@ -158,11 +158,15 @@ let random_events (random_stats : random_stats) burger_stats bps_mult click_mult
         Randomevent.generate_timer random_stats
     | 3 ->
         animate_text animation
-          (match Rand.int 5 with
+          (match Rand.int 8 with
           | 0 -> "Try Clicking the Right Burger"
           | 1 -> "Why Are You Still Playing?"
           | 2 -> "You're Playing the Music Right?"
           | 3 -> "Think About All the Dead Cows"
+          | 4 -> "Put It In Reverse Terr"
+          | 5 -> "I'd Rather Be Watching Endgame"
+          | 6 -> "*Spooky Minecraft Cave Noise*"
+          | 7 -> "RRRRRRR Give Me A Pirate Sandwich"
           | _ -> "*Wet Meat Noises*")
     | _ -> failwith "random event error"
 
@@ -224,7 +228,7 @@ let animate_random () =
     else (
       animation.transparency <- animation.transparency - 5;
       text_draw animation.text
-        (425 - (animation.width / 2))
+        (510 - (animation.width / 2))
         250
         (R.Color.create 50 42 79 (255 - animation.transparency))
         40);
@@ -235,7 +239,7 @@ let animate_random () =
       animation.pause_flag <- false)
     else (
       text_draw animation.text
-        (425 - (animation.width / 2))
+        (510 - (animation.width / 2))
         250
         (R.Color.create 50 42 79 (255 - animation.transparency))
         40;
@@ -246,7 +250,7 @@ let animate_random () =
     else (
       animation.transparency <- animation.transparency + 5;
       text_draw animation.text
-        (425 - (animation.width / 2))
+        (510 - (animation.width / 2))
         250
         (R.Color.create 50 42 79 (255 - animation.transparency))
         40)
