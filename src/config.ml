@@ -2,7 +2,7 @@ module R = Raylib
 (**[information] holds the user's stats — namely their burgers, bps, and clicking power.*)
 
 type information = {
-  mutable burgers : int;
+  mutable burgers : float;
   mutable bps : int;
   mutable click_power : int;
 }

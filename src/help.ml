@@ -3,15 +3,16 @@ include Randomevent
 
 (** [burger_init] initializes the game with 0 burgers, 0 burgers per second, 
     and 1 burger per click.*)
-let burger_init = { burgers = 0; bps = 0; click_power = 1 }
+let burger_init = { burgers = 1000.; bps = 0; click_power = 1 }
 
 (** [increment_burger_click] increments the burger count by one click 
     in a given information type [t].*)
-let increment_burger_click t = t.burgers <- t.burgers + t.click_power
+let increment_burger_click t =
+  t.burgers <- t.burgers +. float_of_int t.click_power
 
 (**[decrease_burger_spend t price] decreases the burger count by [price] in a 
     given information type [t].*)
-let decrease_burger_spend t price = t.burgers <- t.burgers - price
+let decrease_burger_spend t price = t.burgers <- t.burgers -. float_of_int price
 
 (**[increment_bps t item] increments the burgers per second depending on [item] in a 
     given information type [t].*)
@@ -28,9 +29,16 @@ let increment_bps t item bps_mult =
     | "burger wormhole" -> 10000 * !bps_mult
     | _ -> failwith "attempted to increase bps with invalid item")
 
-(**[increment_burger_bps t] increments the total burgers by the burger per second
+(**[increment_burger_bps t] increments the total burgers by the burger per second divided by [frames_per_update]
 in a given information type [t]*)
-let increment_burger_bps t = t.burgers <- t.burgers + t.bps
+let increment_burger_bps t frames_per_update =
+  let new_val =
+    t.burgers +. (float_of_int t.bps /. float_of_int (60 / frames_per_update))
+  in
+  let new_val_rounding = new_val -. (new_val |> int_of_float |> float_of_int) in
+  if new_val_rounding > 0.9999 then
+    t.burgers <- new_val +. 0.1 |> int_of_float |> float_of_int
+  else t.burgers <- new_val
 
 (**[increment_click_power t mult] increments the amount of burgers the user gets in one
     click by a multiplier [mult] in a given information type [t]*)
@@ -104,7 +112,7 @@ let shop (price : int) (item : string) mouse hitbox burger_stats item_stats
     state price_list bps_mult =
   if R.check_collision_point_rec mouse hitbox then
     if R.is_mouse_button_down R.MouseButton.Left then
-      if !state = 6 && burger_stats.burgers > price then (
+      if !state = 6 && int_of_float burger_stats.burgers >= price then (
         state := 4;
         decrease_burger_spend burger_stats price;
         increment_item item_stats item price_list;
@@ -114,7 +122,8 @@ let perm_upgrade (price : int) (item : string) mouse hitbox purchased pr
     burger_stats item_stats state price_list =
   if R.check_collision_point_rec mouse hitbox then
     if R.is_mouse_button_down R.MouseButton.Left then
-      if !state = 6 && burger_stats.burgers > pr && purchased = 0 then (
+      if !state = 6 && int_of_float burger_stats.burgers > pr && purchased = 0
+      then (
         state := 4;
         decrease_burger_spend burger_stats price;
         increment_item item_stats item price_list;
@@ -130,9 +139,11 @@ let random_events (random_stats : random_stats) burger_stats bps_mult click_mult
   if random_stats.timer = 0 then
     match Rand.int 4 with
     | 0 ->
-        let burger_gift = Randomevent.burger_gift burger_stats.burgers in
+        let burger_gift =
+          Randomevent.burger_gift (int_of_float burger_stats.burgers)
+        in
         animate_text animation ("BURGER GIFT! + " ^ string_of_int burger_gift);
-        burger_stats.burgers <- burger_stats.burgers + burger_gift
+        burger_stats.burgers <- burger_stats.burgers +. float_of_int burger_gift
     | 1 ->
         bps_mult := Rand.int 3 + 2;
         animate_text animation
@@ -201,7 +212,8 @@ let facilitate_events golden_burger golden_burger_clicked golden_burger_hover
 let text_draw text x y color size =
   R.draw_text_ex (R.get_font_default ()) text
     (R.Vector2.create (float_of_int x) (float_of_int y))
-    (float_of_int size) 5. color
+    (float_of_int (size - 10))
+    5. color
 
 let animate_random () =
   if animation.flag then

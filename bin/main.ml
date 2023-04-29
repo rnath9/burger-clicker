@@ -82,7 +82,7 @@ let hover_mechanics mouse buy_clicked buy_hover hitbox coord =
 
 (* let text_draw text x y color size = R.draw_text text x y size color *)
 
-let rec loop texture =
+let rec loop frames_per_update texture =
   let ( bg,
         burger,
         burger_hover,
@@ -111,10 +111,9 @@ let rec loop texture =
       R.draw_texture buy 1020 579 R.Color.raywhite;
       R.draw_texture buy 1020 649 R.Color.raywhite;
       time := !time + 1;
-      if !time = 60 then (
-        time := 0;
-        H.increment_burger_bps burger_stats);
-
+      if !time = 60 then time := 0;
+      if !time mod frames_per_update = 0 then
+        H.increment_burger_bps burger_stats frames_per_update;
       if R.is_mouse_button_down R.MouseButton.Left = false then state := 0;
       let mouse_point = R.get_mouse_position () in
       H.facilitate_events golden_burger golden_burger_clicked
@@ -173,7 +172,7 @@ let rec loop texture =
         bps_mult;
 
       H.text_draw
-        (H.truncate (float_of_int burger_stats.burgers) H.suffix_array)
+        (H.truncate burger_stats.burgers H.suffix_array)
         505 15 H.font_color 100;
 
       H.text_draw
@@ -213,8 +212,8 @@ let rec loop texture =
         600 640 H.font_color 50;
 
       H.animate_random ();
-
+      (* R.draw_fps 250 250; *)
       R.end_drawing ();
-      loop texture
+      loop frames_per_update texture
 
-let () = setup () |> loop
+let () = setup () |> loop 5
