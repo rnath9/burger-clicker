@@ -158,7 +158,7 @@ let random_events (random_stats : random_stats) burger_stats bps_mult click_mult
         Randomevent.generate_timer random_stats
     | 3 ->
         animate_text animation
-          (match Rand.int 8 with
+          (match Rand.int 9 with
           | 0 -> "Try Clicking the Right Burger"
           | 1 -> "Why Are You Still Playing?"
           | 2 -> "You're Playing the Music Right?"

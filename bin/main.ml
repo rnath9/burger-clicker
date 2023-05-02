@@ -24,6 +24,9 @@ let setup () =
   let bg_image = R.load_image "images/RescaledBurgerBackground.png" in
   let bg_texture = R.load_texture_from_image bg_image in
   R.unload_image bg_image;
+  let win_image = R.load_image "images/WinScreen.png" in
+  let win_texture = R.load_texture_from_image win_image in
+  R.unload_image win_image;
   let burger_image = R.load_image "images/Transparent_Burger.png" in
   let burger_texture = R.load_texture_from_image burger_image in
   R.unload_image burger_image;
@@ -61,6 +64,7 @@ let setup () =
   R.unload_image golden_burger_clicked_image;
 
   ( bg_texture,
+    win_texture,
     burger_texture,
     burger_hover_texture,
     burger_clicked_texture,
@@ -85,6 +89,7 @@ let hover_mechanics mouse buy_clicked buy_hover hitbox coord =
 
 let rec loop frames_per_update texture =
   let ( bg,
+        win,
         burger,
         burger_hover,
         burger_clicked,
@@ -237,14 +242,15 @@ let rec loop frames_per_update texture =
 
           H.animate_random ();
           (* R.draw_fps 250 250; *)
-          if burger_stats.burgers > 5.0 then won_game := true;
+          if burger_stats.burgers > (1.0 *. (10. ** 300.)) +. 1. then
+            won_game := true;
           R.end_drawing ();
           loop frames_per_update texture
       | true ->
           R.begin_drawing ();
           R.clear_background R.Color.white;
           R.draw_fps 200 200;
-          R.draw_texture bg 0 0 R.Color.white;
+          R.draw_texture win 0 0 R.Color.white;
           R.end_drawing ();
           loop frames_per_update texture)
 
