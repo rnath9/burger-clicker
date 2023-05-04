@@ -27,9 +27,27 @@ let setup () =
   let win_image = R.load_image "images/WinScreen.png" in
   let win_texture = R.load_texture_from_image win_image in
   R.unload_image win_image;
+  let boss = R.load_image "images/BurgerBoss.png" in
+  let boss_texture = R.load_texture_from_image boss in
+  R.unload_image boss;
   let burger_image = R.load_image "images/Transparent_Burger.png" in
   let burger_texture = R.load_texture_from_image burger_image in
   R.unload_image burger_image;
+  let leader = R.load_image "images/BurgerLeader.png" in
+  let leader_texture = R.load_texture_from_image leader in
+  R.unload_image leader;
+  let king = R.load_image "images/BurgerKing.png" in
+  let king_texture = R.load_texture_from_image king in
+  R.unload_image king;
+  let expert = R.load_image "images/BurgerExpert.png" in
+  let expert_texture = R.load_texture_from_image expert in
+  R.unload_image expert;
+  let monster = R.load_image "images/BurgerMonster.png" in
+  let monster_texture = R.load_texture_from_image monster in
+  R.unload_image monster;
+  let goat = R.load_image "images/WinScreen.png" in
+  let goat_texture = R.load_texture_from_image goat in
+  R.unload_image goat;
   let buy_image = R.load_image "images/Buy.png" in
   let buy_texture = R.load_texture_from_image buy_image in
   R.unload_image buy_image;
@@ -65,6 +83,12 @@ let setup () =
 
   ( bg_texture,
     win_texture,
+    boss_texture,
+    leader_texture,
+    king_texture,
+    expert_texture,
+    monster_texture,
+    goat_texture,
     burger_texture,
     burger_hover_texture,
     burger_clicked_texture,
@@ -90,6 +114,12 @@ let hover_mechanics mouse buy_clicked buy_hover hitbox coord =
 let rec loop frames_per_update texture =
   let ( bg,
         win,
+        boss,
+        leader,
+        king,
+        expert,
+        monster,
+        goat,
         burger,
         burger_hover,
         burger_clicked,
@@ -123,11 +153,13 @@ let rec loop frames_per_update texture =
           if !time mod frames_per_update = 0 then
             H.increment_burger_bps burger_stats frames_per_update;
           if R.is_mouse_button_down R.MouseButton.Left = false then state := 0;
+
+          H.facilitate_achievements boss leader king expert monster goat
+            burger_stats;
           let mouse_point = R.get_mouse_position () in
           H.facilitate_events golden_burger golden_burger_clicked
             golden_burger_hover mouse_point state burger_stats bps_mult
             click_mult;
-
           if R.check_collision_point_rec mouse_point H.burger_hitbox then
             if R.is_mouse_button_down R.MouseButton.Left then (
               if !state = 2 then (

@@ -106,6 +106,33 @@ let animation =
     reverse_flag = false;
   }
 
+type achievement = {
+  mutable flag : bool;
+  mutable past : bool;
+  mutable pause_flag : bool;
+  mutable reverse_flag : bool;
+  mutable image : R.Texture.t option;
+  mutable x_pos : int;
+  mutable despawn_timer : int;
+}
+
+let achievement_maker () =
+  {
+    flag = false;
+    past = false;
+    pause_flag = false;
+    reverse_flag = false;
+    image = None;
+    x_pos = -340;
+    despawn_timer = 500;
+  }
+
+let achievement1 = achievement_maker ()
+let achievement2 = achievement_maker ()
+let achievement3 = achievement_maker ()
+let achievement4 = achievement_maker ()
+let achievement5 = achievement_maker ()
+let achievement6 = achievement_maker ()
 let font_color = R.Color.create 50 42 79 255
 let price_color = R.Color.create 226 243 228 255
 let burger_hitbox = R.Rectangle.create 375. 293. 110. 85.

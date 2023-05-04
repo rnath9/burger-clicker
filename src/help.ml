@@ -3,7 +3,7 @@ include Randomevent
 
 (** [burger_init] initializes the game with 0 burgers, 0 burgers per second, 
     and 1 burger per click.*)
-let burger_init = { burgers = 0.; bps = 0; click_power = 1 }
+let burger_init = { burgers = 95.; bps = 0; click_power = 1 }
 
 (** [increment_burger_click] increments the burger count by one click 
     in a given information type [t].*)
@@ -128,6 +128,43 @@ let perm_upgrade (price : int) (item : string) mouse hitbox purchased pr
         decrease_burger_spend burger_stats price;
         increment_item item_stats item price_list;
         increment_click_power burger_stats 10)
+
+let animate_achievement (a : achievement) (i : R.Texture.t) =
+  a.image <- Some i;
+  a.flag <- true
+
+let draw_achievement a =
+  if a.flag && (not a.past) && not a.reverse_flag then (
+    a.despawn_timer <- a.despawn_timer - 1;
+    if a.despawn_timer = 100 then a.reverse_flag <- true;
+    if not a.pause_flag then (
+      a.x_pos <- a.x_pos + 4;
+      if a.x_pos = 4 then a.pause_flag <- true);
+    R.draw_texture
+      (match a.image with Some x -> x | None -> failwith "invalid image")
+      a.x_pos 415 R.Color.raywhite);
+  if a.flag && (not a.past) && a.reverse_flag then (
+    a.despawn_timer <- a.despawn_timer - 1;
+    if a.despawn_timer = 0 then a.past <- true;
+    a.x_pos <- a.x_pos - 4;
+    R.draw_texture
+      (match a.image with Some x -> x | None -> failwith "invalid image")
+      a.x_pos 415 R.Color.raywhite)
+
+let facilitate_achievements boss leader king expert monster goat stats =
+  if stats.burgers >= 100. && not achievement1.flag then
+    animate_achievement achievement1 boss;
+  if stats.burgers >= 1000. then animate_achievement achievement2 leader;
+  if stats.burgers >= 10000. then animate_achievement achievement3 king;
+  if stats.burgers >= 100000. then animate_achievement achievement4 expert;
+  if stats.burgers >= 1000000. then animate_achievement achievement5 monster;
+  if stats.burgers >= 10000000. then animate_achievement achievement6 goat;
+  draw_achievement achievement1;
+  draw_achievement achievement2;
+  draw_achievement achievement3;
+  draw_achievement achievement4;
+  draw_achievement achievement5;
+  draw_achievement achievement6
 
 let animate_text (animation : animation) (text : string) =
   animation.text <- text;
