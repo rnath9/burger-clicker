@@ -45,7 +45,7 @@ let setup () =
   let monster = R.load_image "images/BurgerMonster.png" in
   let monster_texture = R.load_texture_from_image monster in
   R.unload_image monster;
-  let goat = R.load_image "images/WinScreen.png" in
+  let goat = R.load_image "images/BurgerGoat.png" in
   let goat_texture = R.load_texture_from_image goat in
   R.unload_image goat;
   let buy_image = R.load_image "images/Buy.png" in

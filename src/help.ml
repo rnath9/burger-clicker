@@ -3,7 +3,7 @@ include Randomevent
 
 (** [burger_init] initializes the game with 0 burgers, 0 burgers per second, 
     and 1 burger per click.*)
-let burger_init = { burgers = 95.; bps = 0; click_power = 1 }
+let burger_init = { burgers = 9999999.; bps = 0; click_power = 1 }
 
 (** [increment_burger_click] increments the burger count by one click 
     in a given information type [t].*)
@@ -154,11 +154,16 @@ let draw_achievement a =
 let facilitate_achievements boss leader king expert monster goat stats =
   if stats.burgers >= 100. && not achievement1.flag then
     animate_achievement achievement1 boss;
-  if stats.burgers >= 1000. then animate_achievement achievement2 leader;
-  if stats.burgers >= 10000. then animate_achievement achievement3 king;
-  if stats.burgers >= 100000. then animate_achievement achievement4 expert;
-  if stats.burgers >= 1000000. then animate_achievement achievement5 monster;
-  if stats.burgers >= 10000000. then animate_achievement achievement6 goat;
+  if stats.burgers >= 1000. && not achievement2.flag then
+    animate_achievement achievement2 leader;
+  if stats.burgers >= 10000. && not achievement3.flag then
+    animate_achievement achievement3 king;
+  if stats.burgers >= 100000. && not achievement4.flag then
+    animate_achievement achievement4 expert;
+  if stats.burgers >= 1000000. && not achievement5.flag then
+    animate_achievement achievement5 monster;
+  if stats.burgers >= 10000000. && not achievement6.flag then
+    animate_achievement achievement6 goat;
   draw_achievement achievement1;
   draw_achievement achievement2;
   draw_achievement achievement3;
