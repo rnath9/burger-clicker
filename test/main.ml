@@ -1,6 +1,17 @@
 open OUnit2
 open Help
 
+let test_achievement_maker (name : string) (answer : int) : test =
+  name >:: fun _ ->
+  let a = achievement_maker () in
+  a.x_pos <- answer;
+  a.flag <- true;
+  assert_equal answer a.x_pos;
+  assert_equal true a.flag;
+  assert_equal false a.past;
+  assert_equal false a.pause_flag;
+  assert_equal false a.reverse_flag
+
 let test_incr_bur_click (name : string) (info : information) (answer : int) :
     test =
   name >:: fun _ ->
@@ -370,6 +381,8 @@ let help_tests =
     test_truncate "truncation needed 5.56q with rounding" 5557000000000000.
       suffix_array "5.56Q";
     test_animate_text "animation initialization" animation "I'm Animating";
+    test_achievement_maker "Giving negative x_pos" ~-100;
+    test_achievement_maker "Giving positive x_pos" 200;
   ]
 
 let suite = "help test suite" >::: List.flatten [ help_tests ]
