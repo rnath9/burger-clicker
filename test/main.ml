@@ -3,7 +3,7 @@ open Help
 
 let test_achievement_maker (name : string) (answer : int) : test =
   name >:: fun _ ->
-  let a = achievement_maker () in
+  let a = achievement_maker ~-340 415 100 in
   a.x_pos <- answer;
   a.flag <- true;
   assert_equal answer a.x_pos;
@@ -11,6 +11,14 @@ let test_achievement_maker (name : string) (answer : int) : test =
   assert_equal false a.past;
   assert_equal false a.pause_flag;
   assert_equal false a.reverse_flag
+
+let test_achievement_threshold (name : string) (a : achievement)
+    (threshold : int) : test =
+  name >:: fun _ -> assert_equal threshold a.threshold
+
+let test_achievement_y_pos (name : string) (a : achievement) (pos : int) : test
+    =
+  name >:: fun _ -> assert_equal pos a.y_pos
 
 let test_incr_bur_click (name : string) (info : information) (answer : int) :
     test =
@@ -383,6 +391,15 @@ let help_tests =
     test_animate_text "animation initialization" animation "I'm Animating";
     test_achievement_maker "Giving negative x_pos" ~-100;
     test_achievement_maker "Giving positive x_pos" 200;
+    test_achievement_threshold "Achievement 1" achievement1 100;
+    test_achievement_threshold "Achievement 2" achievement2 1000;
+    test_achievement_threshold "Achievement 3" achievement3 10000;
+    test_achievement_threshold "Achievement 4" achievement4 100000;
+    test_achievement_threshold "Achievement 5" achievement5 1000000;
+    test_achievement_threshold "Achievement 6" achievement6 10000000;
+    test_achievement_threshold "Item Achievements" iachievement1 1;
+    test_achievement_y_pos "Milestone Achievement" achievement3 415;
+    test_achievement_y_pos "Item Achievement" iachievement4 155;
   ]
 
 let suite = "help test suite" >::: List.flatten [ help_tests ]

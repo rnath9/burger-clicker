@@ -113,26 +113,36 @@ type achievement = {
   mutable reverse_flag : bool;
   mutable image : R.Texture.t option;
   mutable x_pos : int;
+  mutable y_pos : int;
   mutable despawn_timer : int;
+  mutable threshold : int;
 }
 
-let achievement_maker () =
+let achievement_maker x y t =
   {
     flag = false;
     past = false;
     pause_flag = false;
     reverse_flag = false;
     image = None;
-    x_pos = -340;
+    x_pos = x;
+    y_pos = y;
     despawn_timer = 500;
+    threshold = t;
   }
 
-let achievement1 = achievement_maker ()
-let achievement2 = achievement_maker ()
-let achievement3 = achievement_maker ()
-let achievement4 = achievement_maker ()
-let achievement5 = achievement_maker ()
-let achievement6 = achievement_maker ()
+let achievement1 = achievement_maker ~-340 415 100
+let achievement2 = achievement_maker ~-340 415 1000
+let achievement3 = achievement_maker ~-340 415 10000
+let achievement4 = achievement_maker ~-340 415 100000
+let achievement5 = achievement_maker ~-340 415 1000000
+let achievement6 = achievement_maker ~-340 415 10000000
+let iachievement1 = achievement_maker ~-340 155 1
+let iachievement2 = achievement_maker ~-340 155 1
+let iachievement3 = achievement_maker ~-340 155 1
+let iachievement4 = achievement_maker ~-340 155 1
+let iachievement5 = achievement_maker ~-340 155 1
+let iachievement6 = achievement_maker ~-340 155 1
 let font_color = R.Color.create 50 42 79 255
 let price_color = R.Color.create 226 243 228 255
 let burger_hitbox = R.Rectangle.create 375. 293. 110. 85.

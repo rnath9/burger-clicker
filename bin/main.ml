@@ -48,6 +48,24 @@ let setup () =
   let goat = R.load_image "images/BurgerGoat.png" in
   let goat_texture = R.load_texture_from_image goat in
   R.unload_image goat;
+  let spatula = R.load_image "images/FryCook.png" in
+  let spatula_texture = R.load_texture_from_image spatula in
+  R.unload_image spatula;
+  let grill = R.load_image "images/TheChef.png" in
+  let grill_texture = R.load_texture_from_image grill in
+  R.unload_image grill;
+  let tree = R.load_image "images/Newton.png" in
+  let tree_texture = R.load_texture_from_image tree in
+  R.unload_image tree;
+  let truck = R.load_image "images/ElJefe.png" in
+  let truck_texture = R.load_texture_from_image truck in
+  R.unload_image truck;
+  let lab = R.load_image "images/BillNye.png" in
+  let lab_texture = R.load_texture_from_image lab in
+  R.unload_image lab;
+  let hole = R.load_image "images/Nether.png" in
+  let hole_texture = R.load_texture_from_image hole in
+  R.unload_image hole;
   let buy_image = R.load_image "images/Buy.png" in
   let buy_texture = R.load_texture_from_image buy_image in
   R.unload_image buy_image;
@@ -89,6 +107,12 @@ let setup () =
     expert_texture,
     monster_texture,
     goat_texture,
+    spatula_texture,
+    grill_texture,
+    tree_texture,
+    truck_texture,
+    lab_texture,
+    hole_texture,
     burger_texture,
     burger_hover_texture,
     burger_clicked_texture,
@@ -120,6 +144,12 @@ let rec loop frames_per_update texture =
         expert,
         monster,
         goat,
+        spatula,
+        grill,
+        tree,
+        truck,
+        lab,
+        hole,
         burger,
         burger_hover,
         burger_clicked,
@@ -154,8 +184,8 @@ let rec loop frames_per_update texture =
             H.increment_burger_bps burger_stats frames_per_update;
           if R.is_mouse_button_down R.MouseButton.Left = false then state := 0;
 
-          H.facilitate_achievements boss leader king expert monster goat
-            burger_stats;
+          H.facilitate_achievements boss leader king expert monster goat spatula
+            grill tree truck lab hole burger_stats item_stats;
           let mouse_point = R.get_mouse_position () in
           H.facilitate_events golden_burger golden_burger_clicked
             golden_burger_hover mouse_point state burger_stats bps_mult

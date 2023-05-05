@@ -142,34 +142,65 @@ let draw_achievement a =
       if a.x_pos = 4 then a.pause_flag <- true);
     R.draw_texture
       (match a.image with Some x -> x | None -> failwith "invalid image")
-      a.x_pos 415 R.Color.raywhite);
+      a.x_pos a.y_pos R.Color.raywhite);
   if a.flag && (not a.past) && a.reverse_flag then (
     a.despawn_timer <- a.despawn_timer - 1;
     if a.despawn_timer = 0 then a.past <- true;
     a.x_pos <- a.x_pos - 4;
     R.draw_texture
       (match a.image with Some x -> x | None -> failwith "invalid image")
-      a.x_pos 415 R.Color.raywhite)
+      a.x_pos a.y_pos R.Color.raywhite)
 
-let facilitate_achievements boss leader king expert monster goat stats =
-  if stats.burgers >= 100. && not achievement1.flag then
-    animate_achievement achievement1 boss;
-  if stats.burgers >= 1000. && not achievement2.flag then
-    animate_achievement achievement2 leader;
-  if stats.burgers >= 10000. && not achievement3.flag then
-    animate_achievement achievement3 king;
-  if stats.burgers >= 100000. && not achievement4.flag then
-    animate_achievement achievement4 expert;
-  if stats.burgers >= 1000000. && not achievement5.flag then
-    animate_achievement achievement5 monster;
-  if stats.burgers >= 10000000. && not achievement6.flag then
-    animate_achievement achievement6 goat;
+let facilitate_achievements boss leader king expert monster goat spatula grill
+    tree truck lab hole bstats istats =
+  if
+    bstats.burgers >= float_of_int achievement1.threshold
+    && not achievement1.flag
+  then animate_achievement achievement1 boss;
+  if
+    bstats.burgers >= float_of_int achievement2.threshold
+    && not achievement2.flag
+  then animate_achievement achievement2 leader;
+  if
+    bstats.burgers >= float_of_int achievement3.threshold
+    && not achievement3.flag
+  then animate_achievement achievement3 king;
+  if
+    bstats.burgers >= float_of_int achievement4.threshold
+    && not achievement4.flag
+  then animate_achievement achievement4 expert;
+  if
+    bstats.burgers >= float_of_int achievement5.threshold
+    && not achievement5.flag
+  then animate_achievement achievement5 monster;
+  if
+    bstats.burgers >= float_of_int achievement6.threshold
+    && not achievement6.flag
+  then animate_achievement achievement6 goat;
+  if istats.spatula >= iachievement1.threshold && not iachievement1.flag then
+    animate_achievement iachievement1 spatula;
+  if istats.grilling_dad >= iachievement2.threshold && not iachievement2.flag
+  then animate_achievement iachievement2 grill;
+  if istats.burger_tree >= iachievement3.threshold && not iachievement3.flag
+  then animate_achievement iachievement3 tree;
+  if istats.food_truck >= iachievement4.threshold && not iachievement4.flag then
+    animate_achievement iachievement4 truck;
+  if istats.burger_lab >= iachievement5.threshold && not iachievement5.flag then
+    animate_achievement iachievement5 lab;
+  if istats.burger_wormhole >= iachievement6.threshold && not iachievement6.flag
+  then animate_achievement iachievement6 hole;
   draw_achievement achievement1;
   draw_achievement achievement2;
   draw_achievement achievement3;
   draw_achievement achievement4;
   draw_achievement achievement5;
-  draw_achievement achievement6
+  draw_achievement achievement6;
+  draw_achievement iachievement1;
+  draw_achievement iachievement2;
+  draw_achievement iachievement3;
+  draw_achievement iachievement4;
+  draw_achievement iachievement5;
+  draw_achievement iachievement6
 
 let animate_text (animation : animation) (text : string) =
   animation.text <- text;
