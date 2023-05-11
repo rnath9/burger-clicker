@@ -289,7 +289,7 @@ let animate_random () =
     else (
       animation.transparency <- animation.transparency - 5;
       text_draw animation.text
-        (510 - (animation.width / 2))
+        (500 - (animation.width / 2))
         250
         (R.Color.create 50 42 79 (255 - animation.transparency))
         40);
@@ -300,7 +300,7 @@ let animate_random () =
       animation.pause_flag <- false)
     else (
       text_draw animation.text
-        (510 - (animation.width / 2))
+        (500 - (animation.width / 2))
         250
         (R.Color.create 50 42 79 (255 - animation.transparency))
         40;
@@ -311,7 +311,7 @@ let animate_random () =
     else (
       animation.transparency <- animation.transparency + 5;
       text_draw animation.text
-        (510 - (animation.width / 2))
+        (500 - (animation.width / 2))
         250
         (R.Color.create 50 42 79 (255 - animation.transparency))
         40)
