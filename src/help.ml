@@ -7,8 +7,6 @@ let burger_init = { burgers = 0.; bps = 0; click_power = 1 }
 let increment_burger_click (t : Config.information) =
   t.burgers <- t.burgers +. float_of_int t.click_power
 
-(**[decrease_burger_spend t price] decreases the burger count by [price] in a 
-    given information type [t].*)
 let decrease_burger_spend (t : Config.information) price =
   t.burgers <- t.burgers -. float_of_int price
 

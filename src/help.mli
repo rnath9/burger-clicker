@@ -47,7 +47,13 @@ val perm_upgrade :
   int ref ->
   Config.prices ->
   unit
-(**[perm_upgrade price item mouse hitbox purchased ]*)
+(**[perm_upgrade price item mouse hitbox purchased burger_stats item_stats state 
+    price_list] Checks whether [mouse] has clicked on [hitbox] for the permanent 
+    upgrades. If it has, then if the associated item's price is buyable for the 
+    player (depending on if [burger_stats] has a burger count greater than or 
+    equal to [price]), then [burger_stats], [item_stats], [price_list], and 
+    [bps_mult] are updated appropriately to reflect the buying. Once this is 
+    done, the item is longer purchaseable.*)
 
 val facilitate_achievements :
   Raylib.Texture.t ->
@@ -77,16 +83,27 @@ val facilitate_events :
   int ref ->
   int ref ->
   unit
-(** placeholder comment*)
+(** [facilitate_events golden_burger golden_burger_clicked golden_burger_hover
+    mouse_point state burger_stats bps_mult cps_mult] enables the random event
+    burger event spawning with the textures [golden_burger], 
+    [golden_burger_clicked], and [golden_burger_hover] being use for the
+    animation. [mouse_point] is used to check if the player is interacting with
+    the burger. [bps_mult] and [cps_mult] are updated accordingly if the random
+    event burger is clicked.*)
 
 val text_draw : string -> int -> int -> Raylib.Color.t -> int -> unit
-(** placeholder comment*)
+(** [text_draw text x y color size] draws text onto the GUI screen with the text
+  in [text] with the top left corner at position [x] [y]. The color of the text
+  is [color] and the size is [size]*)
 
 val animate_random : unit -> unit
-(**placeholder comment*)
+(** [animate_random] controls the animation of the text that appears when clicking
+    a random burger. It places the text in the center of the screen and fades
+    in, pauses for one second, and fades out.*)
 
 val decrease_burger_spend : Config.information -> int -> unit
-(**placeholder comment*)
+(**[decrease_burger_spend t price] decreases the burger count by [price] in a 
+    given information type [t].*)
 
 val increment_bps : Config.information -> string -> int ref -> unit
 (**[increment_bps t item] increments the burgers per second depending on [item] in a 
