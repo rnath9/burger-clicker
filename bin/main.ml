@@ -304,7 +304,7 @@ let rec loop frames_per_update texture =
 
           H.animate_random ();
           (* R.draw_fps 250 250; *)
-          if burger_stats.burgers > (1.0 *. (10. ** 300.)) +. 1. then
+          if burger_stats.burgers > (1.0 *. (10. ** 16.)) +. 1. then
             won_game := true;
           R.end_drawing ();
           loop frames_per_update texture

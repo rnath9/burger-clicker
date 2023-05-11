@@ -8,4 +8,6 @@
   camlimages.png
   camlimages.graphics
   camlimages.jpeg)
- (public_name Main))
+ (public_name Main)
+ (instrumentation
+  (backend bisect_ppx)))

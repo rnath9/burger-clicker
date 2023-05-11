@@ -12,6 +12,16 @@ let test_achievement_maker (name : string) (answer : int) : test =
   assert_equal false a.pause_flag;
   assert_equal false a.reverse_flag
 
+let test_random_gift (name : string) (burgers : int) (lower_bound : int)
+    (upper_bound : int) : test =
+  name >:: fun _ ->
+  let i = ref 0 in
+  while !i < 100 do
+    incr i;
+    assert_bool "lower-bound failed" (burger_gift burgers >= lower_bound);
+    assert_bool "upper bound failed" (burger_gift burgers <= upper_bound)
+  done
+
 let test_achievement_threshold (name : string) (a : achievement)
     (threshold : int) : test =
   name >:: fun _ -> assert_equal threshold a.threshold
@@ -77,17 +87,65 @@ let test_animate_text (name : string) (animation : animation) (text : string) :
     animate_text animation text;
     animation.text = text && animation.flag = true)
 
-let init_state = { burgers = 0.; bps = 0; click_power = 1 }
+let init_state () = { burgers = 0.; bps = 0; click_power = 1 }
+
+let one_sauce_nothing_else =
+  {
+    sauce = 1;
+    secret_sauce = 0;
+    spatula = 0;
+    grilling_dad = 0;
+    burger_tree = 0;
+    food_truck = 0;
+    burger_lab = 0;
+    burger_wormhole = 0;
+  }
+
+let one_secret_sauce_nothing_else =
+  {
+    sauce = 0;
+    secret_sauce = 1;
+    spatula = 0;
+    grilling_dad = 0;
+    burger_tree = 0;
+    food_truck = 0;
+    burger_lab = 0;
+    burger_wormhole = 0;
+  }
+
+let new_item_init () =
+  {
+    sauce = 0;
+    secret_sauce = 0;
+    spatula = 0;
+    grilling_dad = 0;
+    burger_tree = 0;
+    food_truck = 0;
+    burger_lab = 0;
+    burger_wormhole = 0;
+  }
+
 let suffix_array = [ ""; "K"; "M"; "B"; "T"; "Q" ]
 let bps_mult = ref 1
 
 let help_tests =
   [
-    test_incr_bur_click "increment with one burger" init_state 1;
+    test_random_gift "random gift but 0 burgers" 0 0 0;
+    test_random_gift "random gift but just 1 burger" 1 0 0;
+    test_random_gift "random gift early game burgers (100)" 100 10 30;
+    test_random_gift "random gift late game burgers (3423530)" 3423530 342353
+      (3423530 * 3);
+    test_incr_bur_click "increment with one burger" (init_state ()) 1;
     test_decr_bur_spend "Buying an item"
       { burgers = 10000.; bps = 100; click_power = 2 }
       5000 5000;
-    test_incr_bps "buy spatula" init_state "spatula" 1 bps_mult;
+    test_incr_bps "buy spatula" (init_state ()) "spatula" 1 bps_mult;
+    test_incr_bps "buy grilling dad" (init_state ()) "grilling dad" 5 bps_mult;
+    test_incr_bps "buy burger tree" (init_state ()) "burger tree" 50 bps_mult;
+    test_incr_bps "buy food truck" (init_state ()) "food truck" 250 bps_mult;
+    test_incr_bps "buy burger lab" (init_state ()) "burger lab" 1500 bps_mult;
+    test_incr_bps "buy burger wormhole" (init_state ()) "burger wormhole" 10000
+      bps_mult;
     test_incr_bur_bps
       "incrementing 1 sec based on 30 bps with 60 frames per update"
       { burgers = 0.; bps = 30; click_power = 2 }
@@ -109,21 +167,33 @@ let help_tests =
     test_incr_bur_bps "incrementing based on bps with 5 frames per update"
       { burgers = 10000.; bps = 100; click_power = 2 }
       5 1 10100;
-    test_incr_bur_bps "incrementing based on bps with 1 frame per update"
-      { burgers = 10000.; bps = 100; click_power = 2 }
-      1 1 10100;
     test_incr_bur_bps
       "incrementing 2 sec based on bps with 30 frames per update"
       { burgers = 10000.; bps = 100; click_power = 2 }
-      60 2 10200;
+      30 2 10200;
     test_incr_bur_bps
       "incrementing 15 sec based on bps with 5 frames per update"
       { burgers = 10000.; bps = 100; click_power = 2 }
-      60 15 11500;
+      5 15 11500;
+    test_incr_bur_bps
+      "incrementing based on bps with 1 frame per update for a minute"
+      { burgers = 10000.; bps = 100; click_power = 2 }
+      1 60 16000;
     test_incr_click_pwr "incrementing click power"
       { burgers = 10000.; bps = 100; click_power = 2 }
       2 4;
-    (let items = item_init in
+    test_incr_item "sauce increment from 0 to 1" (new_item_init ()) "sauce"
+      item_price_init one_sauce_nothing_else item_price_init;
+    test_incr_item "sauce increment from 1 doesn't change"
+      one_sauce_nothing_else "sauce" item_price_init one_sauce_nothing_else
+      item_price_init;
+    test_incr_item "secret sauce increment from 0 to 1" (new_item_init ())
+      "secret sauce" item_price_init one_secret_sauce_nothing_else
+      item_price_init;
+    test_incr_item "secret sauce increment from 1 doesn't change"
+      one_secret_sauce_nothing_else "secret sauce" item_price_init
+      one_secret_sauce_nothing_else item_price_init;
+    (let items = new_item_init () in
      let prices = item_price_init in
      test_incr_item "incrementing grilling dads" items "grilling dad" prices
        {
@@ -188,12 +258,12 @@ let help_tests =
         burger_lab_price = 100000;
         burger_wormhole_price = 1000000;
       };
-    test_incr_item "incrementing burger tree"
+    test_incr_item "incrementing burger tree with expected game progression"
       {
         sauce = 0;
         secret_sauce = 0;
-        spatula = 0;
-        grilling_dad = 0;
+        spatula = 4;
+        grilling_dad = 3;
         burger_tree = 0;
         food_truck = 0;
         burger_lab = 0;
@@ -203,8 +273,8 @@ let help_tests =
       {
         sauce_price = 1000;
         secret_sauce_price = 500000;
-        spatula_price = 15;
-        grilling_dad_price = 100;
+        spatula_price = 43;
+        grilling_dad_price = 234;
         burger_tree_price = 1500;
         food_truck_price = 10000;
         burger_lab_price = 100000;
@@ -213,8 +283,8 @@ let help_tests =
       {
         sauce = 0;
         secret_sauce = 0;
-        spatula = 0;
-        grilling_dad = 0;
+        spatula = 4;
+        grilling_dad = 3;
         burger_tree = 1;
         food_truck = 0;
         burger_lab = 0;
@@ -223,20 +293,20 @@ let help_tests =
       {
         sauce_price = 1000;
         secret_sauce_price = 500000;
-        spatula_price = 15;
-        grilling_dad_price = 100;
+        spatula_price = 43;
+        grilling_dad_price = 234;
         burger_tree_price = 1995;
         food_truck_price = 10000;
         burger_lab_price = 100000;
         burger_wormhole_price = 1000000;
       };
-    test_incr_item "incrementing food truck"
+    test_incr_item "incrementing food truck with expected game progression"
       {
-        sauce = 0;
+        sauce = 1;
         secret_sauce = 0;
-        spatula = 0;
-        grilling_dad = 0;
-        burger_tree = 0;
+        spatula = 10;
+        grilling_dad = 5;
+        burger_tree = 2;
         food_truck = 0;
         burger_lab = 0;
         burger_wormhole = 0;
@@ -245,19 +315,19 @@ let help_tests =
       {
         sauce_price = 1000;
         secret_sauce_price = 500000;
-        spatula_price = 15;
-        grilling_dad_price = 100;
-        burger_tree_price = 1500;
+        spatula_price = 231;
+        grilling_dad_price = 413;
+        burger_tree_price = 2650;
         food_truck_price = 10000;
         burger_lab_price = 100000;
         burger_wormhole_price = 1000000;
       }
       {
-        sauce = 0;
+        sauce = 1;
         secret_sauce = 0;
-        spatula = 0;
-        grilling_dad = 0;
-        burger_tree = 0;
+        spatula = 10;
+        grilling_dad = 5;
+        burger_tree = 2;
         food_truck = 1;
         burger_lab = 0;
         burger_wormhole = 0;
@@ -265,21 +335,21 @@ let help_tests =
       {
         sauce_price = 1000;
         secret_sauce_price = 500000;
-        spatula_price = 15;
-        grilling_dad_price = 100;
-        burger_tree_price = 1500;
+        spatula_price = 231;
+        grilling_dad_price = 413;
+        burger_tree_price = 2650;
         food_truck_price = 13300;
         burger_lab_price = 100000;
         burger_wormhole_price = 1000000;
       };
-    test_incr_item "incrementing burger lab"
+    test_incr_item "incrementing burger lab with expected game progression"
       {
-        sauce = 0;
+        sauce = 1;
         secret_sauce = 0;
-        spatula = 0;
-        grilling_dad = 0;
-        burger_tree = 0;
-        food_truck = 0;
+        spatula = 18;
+        grilling_dad = 10;
+        burger_tree = 5;
+        food_truck = 2;
         burger_lab = 0;
         burger_wormhole = 0;
       }
@@ -287,73 +357,73 @@ let help_tests =
       {
         sauce_price = 1000;
         secret_sauce_price = 500000;
-        spatula_price = 15;
-        grilling_dad_price = 100;
-        burger_tree_price = 1500;
-        food_truck_price = 10000;
+        spatula_price = 2250;
+        grilling_dad_price = 1720;
+        burger_tree_price = 6240;
+        food_truck_price = 17690;
         burger_lab_price = 100000;
         burger_wormhole_price = 1000000;
       }
       {
-        sauce = 0;
+        sauce = 1;
         secret_sauce = 0;
-        spatula = 0;
-        grilling_dad = 0;
-        burger_tree = 0;
-        food_truck = 0;
+        spatula = 18;
+        grilling_dad = 10;
+        burger_tree = 5;
+        food_truck = 2;
         burger_lab = 1;
         burger_wormhole = 0;
       }
       {
         sauce_price = 1000;
         secret_sauce_price = 500000;
-        spatula_price = 15;
-        grilling_dad_price = 100;
-        burger_tree_price = 1500;
-        food_truck_price = 10000;
+        spatula_price = 2250;
+        grilling_dad_price = 1720;
+        burger_tree_price = 6240;
+        food_truck_price = 17690;
         burger_lab_price = 133000;
         burger_wormhole_price = 1000000;
       };
-    test_incr_item "incrementing burger wormhole"
+    test_incr_item "incrementing burger wormhole with expected game progression"
       {
-        sauce = 0;
-        secret_sauce = 0;
-        spatula = 0;
-        grilling_dad = 0;
-        burger_tree = 0;
-        food_truck = 0;
-        burger_lab = 0;
+        sauce = 1;
+        secret_sauce = 1;
+        spatula = 20;
+        grilling_dad = 15;
+        burger_tree = 10;
+        food_truck = 10;
+        burger_lab = 10;
         burger_wormhole = 0;
       }
       "burger wormhole"
       {
         sauce_price = 1000;
         secret_sauce_price = 500000;
-        spatula_price = 15;
-        grilling_dad_price = 100;
-        burger_tree_price = 1500;
-        food_truck_price = 10000;
-        burger_lab_price = 100000;
+        spatula_price = 3980;
+        grilling_dad_price = 7130;
+        burger_tree_price = 25970;
+        food_truck_price = 173180;
+        burger_lab_price = 1730000;
         burger_wormhole_price = 1000000;
       }
       {
-        sauce = 0;
-        secret_sauce = 0;
-        spatula = 0;
-        grilling_dad = 0;
-        burger_tree = 0;
-        food_truck = 0;
-        burger_lab = 0;
+        sauce = 1;
+        secret_sauce = 1;
+        spatula = 20;
+        grilling_dad = 15;
+        burger_tree = 10;
+        food_truck = 10;
+        burger_lab = 10;
         burger_wormhole = 1;
       }
       {
         sauce_price = 1000;
         secret_sauce_price = 500000;
-        spatula_price = 15;
-        grilling_dad_price = 100;
-        burger_tree_price = 1500;
-        food_truck_price = 10000;
-        burger_lab_price = 100000;
+        spatula_price = 3980;
+        grilling_dad_price = 7130;
+        burger_tree_price = 25970;
+        food_truck_price = 173180;
+        burger_lab_price = 1730000;
         burger_wormhole_price = 1330000;
       };
     test_truncate "no truncation needed 0" 0. suffix_array "0";
