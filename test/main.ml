@@ -1,5 +1,7 @@
 open OUnit2
-open Help
+open Helper.Help
+open Helper.Config
+open Helper.Randomevent
 
 let test_achievement_maker (name : string) (answer : int) : test =
   name >:: fun _ ->

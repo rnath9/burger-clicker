@@ -1,13 +1,6 @@
 (executable
  (name main)
- (libraries
-  help
-  ounit2
-  graphics
-  raylib
-  camlimages.png
-  camlimages.graphics
-  camlimages.jpeg)
+ (libraries helper ounit2 raylib)
  (public_name Main)
  (instrumentation
   (backend bisect_ppx)))

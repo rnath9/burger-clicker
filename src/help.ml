@@ -1,22 +1,18 @@
-include Config
-include Randomevent
+open Config
+module R = Raylib
+module Rand = Random
 
-(** [burger_init] initializes the game with 0 burgers, 0 burgers per second, 
-    and 1 burger per click.*)
 let burger_init = { burgers = 0.; bps = 0; click_power = 1 }
 
-(** [increment_burger_click] increments the burger count by one click 
-    in a given information type [t].*)
-let increment_burger_click t =
+let increment_burger_click (t : Config.information) =
   t.burgers <- t.burgers +. float_of_int t.click_power
 
 (**[decrease_burger_spend t price] decreases the burger count by [price] in a 
     given information type [t].*)
-let decrease_burger_spend t price = t.burgers <- t.burgers -. float_of_int price
+let decrease_burger_spend (t : Config.information) price =
+  t.burgers <- t.burgers -. float_of_int price
 
-(**[increment_bps t item] increments the burgers per second depending on [item] in a 
-    given information type [t].*)
-let increment_bps t item bps_mult =
+let increment_bps (t : Config.information) item bps_mult =
   t.bps <-
     (t.bps
     +
@@ -29,9 +25,7 @@ let increment_bps t item bps_mult =
     | "burger wormhole" -> 10000 * !bps_mult
     | _ -> failwith "attempted to increase bps with invalid item")
 
-(**[increment_burger_bps t] increments the total burgers by the burger per second divided by [frames_per_update]
-in a given information type [t]*)
-let increment_burger_bps t frames_per_update =
+let increment_burger_bps (t : Config.information) frames_per_update =
   let new_val =
     t.burgers +. (float_of_int t.bps /. float_of_int (60 / frames_per_update))
   in
@@ -40,9 +34,8 @@ let increment_burger_bps t frames_per_update =
     t.burgers <- new_val +. 0.1 |> int_of_float |> float_of_int
   else t.burgers <- new_val
 
-(**[increment_click_power t mult] increments the amount of burgers the user gets in one
-    click by a multiplier [mult] in a given information type [t]*)
-let increment_click_power t mult = t.click_power <- t.click_power * mult
+let increment_click_power (t : Config.information) mult =
+  t.click_power <- t.click_power * mult
 
 (**[increase_price price] is used to increase the price [price] of an item by 33% of its intial 
     cost after buying it. Example: if [price] is 300, [increase_price price] will return
@@ -51,11 +44,7 @@ let increment_click_power t mult = t.click_power <- t.click_power * mult
 let increase_price (price : int) =
   (price |> float_of_int) *. 1.33 |> int_of_float
 
-(**[increment_item p item] updates the amount of an item [item] in [p] and records its new 
-    associated price in a mutable record [pr]. Example: if a spatula is bought, 
-    then [increment_item p "spatula" pr] would increment [p.spatula] by 1, and update [pr.spatula_price]
-    using [increase_price]*)
-let increment_item p item (pr : prices) =
+let increment_item (p : Config.powerups) item (pr : Config.prices) =
   match item with
   | "sauce" -> p.sauce <- 1
   | "secret sauce" -> p.secret_sauce <- 1
@@ -88,8 +77,6 @@ let increment_item p item (pr : prices) =
 (**[round3 n] rounds [n] to the nearest hundredth*)
 let round3 n = Float.(n *. 100.0 |> round |> fun x -> x /. 100.0)
 
-(**[truncate num suffix] handles the logic for representing a digit on the top of
-    the screen for user view.*)
 let rec truncate num suffix =
   match round3 num with
   | n when n < 1000. -> (
@@ -108,8 +95,8 @@ let rec truncate num suffix =
           ^ suff)
   | n -> truncate (n /. 1000.) (List.tl suffix)
 
-let shop (price : int) (item : string) mouse hitbox burger_stats item_stats
-    state price_list bps_mult =
+let shop (price : int) (item : string) mouse hitbox
+    (burger_stats : Config.information) item_stats state price_list bps_mult =
   if R.check_collision_point_rec mouse hitbox then
     if R.is_mouse_button_down R.MouseButton.Left then
       if !state = 6 && int_of_float burger_stats.burgers >= price then (
@@ -118,11 +105,14 @@ let shop (price : int) (item : string) mouse hitbox burger_stats item_stats
         increment_item item_stats item price_list;
         increment_bps burger_stats item bps_mult)
 
-let perm_upgrade (price : int) (item : string) mouse hitbox purchased pr
-    burger_stats item_stats state price_list =
+let perm_upgrade (price : int) (item : string) mouse hitbox purchased
+    (burger_stats : Config.information) item_stats state price_list =
   if R.check_collision_point_rec mouse hitbox then
     if R.is_mouse_button_down R.MouseButton.Left then
-      if !state = 6 && int_of_float burger_stats.burgers > pr && purchased = 0
+      if
+        !state = 6
+        && int_of_float burger_stats.burgers >= price
+        && purchased = 0
       then (
         state := 4;
         decrease_burger_spend burger_stats price;
@@ -207,8 +197,8 @@ let animate_text (animation : animation) (text : string) =
   animation.width <- R.measure_text animation.text 40;
   animation.flag <- true
 
-let random_events (random_stats : random_stats) burger_stats bps_mult click_mult
-    =
+let random_events (random_stats : Config.random_stats) burger_stats bps_mult
+    click_mult =
   if random_stats.timer = 0 then
     match Rand.int 4 with
     | 0 ->

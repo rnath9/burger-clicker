@@ -1,7 +1,7 @@
 module Rand = Stdlib.Random
-include Config
+open Config
 
-let generate_timer (stats : random_stats) =
+let generate_timer (stats : Config.random_stats) =
   let time = (Rand.int 30 * 60) + stats.min_time in
   stats.timer <- -time
 
