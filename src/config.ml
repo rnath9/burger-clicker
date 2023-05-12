@@ -41,7 +41,6 @@ type prices = {
 type random_event_draw = {
   mutable x : float;
   mutable y : float;
-  mutable alpha : float;
   timer : int;
   mutable random_flag : bool;
   mutable despawn_timer : int;
@@ -76,14 +75,7 @@ let item_price_init =
   }
 
 let random_draw =
-  {
-    x = 0.;
-    y = 0.;
-    alpha = 0.;
-    timer = 0;
-    random_flag = false;
-    despawn_timer = 0;
-  }
+  { x = 0.; y = 0.; timer = 0; random_flag = false; despawn_timer = 0 }
 
 type animation = {
   mutable flag : bool;

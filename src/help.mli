@@ -71,7 +71,11 @@ val facilitate_achievements :
   Config.information ->
   Config.powerups ->
   unit
-(** placeholder comment*)
+(** [facilitate_achievements boss leader king expert monster goat spatula grill
+    tree truck lab hole bstats istats] checks the flags of each achievement
+    and begins whichever achievement has just been reached for the first time.
+    Each texture item that the function takes in represents a different
+    achievement and the stats are used to check if the threshold has been hit.*)
 
 val facilitate_events :
   Raylib.Texture.t ->
@@ -97,26 +101,26 @@ val text_draw : string -> int -> int -> Raylib.Color.t -> int -> unit
   is [color] and the size is [size]*)
 
 val animate_random : unit -> unit
-(** [animate_random] controls the animation of the text that appears when clicking
-    a random burger. It places the text in the center of the screen and fades
-    in, pauses for one second, and fades out.*)
+(** [animate_random] controls the animation of the text that appears when 
+    clicking a random burger. It places the text in the center of the screen 
+    and fades in, pauses for one second, and fades out.*)
 
 val decrease_burger_spend : Config.information -> int -> unit
 (**[decrease_burger_spend t price] decreases the burger count by [price] in a 
     given information type [t].*)
 
 val increment_bps : Config.information -> string -> int ref -> unit
-(**[increment_bps t item] increments the burgers per second depending on [item] in a 
-    given information type [t].*)
+(**[increment_bps t item] increments the burgers per second depending on [item] 
+    in a given information type [t].*)
 
 val increment_click_power : Config.information -> int -> unit
-(**[increment_click_power t mult] increments the amount of burgers the user gets in one
-    click by a multiplier [mult] in a given information type [t]*)
+(**[increment_click_power t mult] increments the amount of burgers the user 
+    gets in one click by a multiplier [mult] in a given information type [t]*)
 
 val increment_item : Config.powerups -> string -> Config.prices -> unit
-(**[increment_item p item] updates the amount of an item [item] in [p] and records its new 
-    associated price in a mutable record [pr]. Example: if a spatula is bought, 
-    then [increment_item p "spatula" pr] would increment [p.spatula] by 1, and update [pr.spatula_price]
-    using [increase_price]*)
+(**[increment_item p item] updates the amount of an item [item] in [p] and 
+    records its new associated price in a mutable record [pr]. Example: if a 
+    spatula is bought, then [increment_item p "spatula" pr] would increment 
+    [p.spatula] by 1, and update [pr.spatula_price] using [increase_price]*)
 
 val animate_text : Config.animation -> string -> unit
