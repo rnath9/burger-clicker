@@ -2,5 +2,4 @@
  (name main)
  (libraries helper ounit2 raylib)
  (public_name Main)
- (instrumentation
-  (backend bisect_ppx)))
+ (instrumentation))

@@ -7,12 +7,9 @@ https://cs3110.github.io/textbook/chapters/preface/install.html
 
 For Windows Users:
 
-Open up Ubuntu and paste the following lines into it individually,
-hitting enter in between each line:
+Open up Ubuntu, paste the following line and hit enter:
 
-opam install dune graphics camlimages conf-libpng
-
-sudo apt-get install -y xfonts-base
+opam install raylib
 
 For Mac Users:
 
