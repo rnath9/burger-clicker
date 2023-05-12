@@ -1,3 +1,44 @@
+(**Testing plan:
+
+Since we made a game that runs through user interactions with our GUI, our
+testing capacity for OUnit was fairly limited. Thus, we designed our test cases
+with a few ideas in mind:
+
+- For our methods that involved use of the Raylib library, like our clicking
+animations, hover animations, and ensuring that the sprites appeared on the 
+right portions of the screen, these would be manually play tested. However, 
+the internal logic — implemented in modules Helper.Help, Helper.Randomevent,
+and Helper.Config — was definitely testable through OUnit, since we can test 
+that certain numbers are as expected, and that certain game-states line up with
+what we'd expect them to look like after a user does something, such as buying
+a spatula. Thus, we tested our internal logic as follows:
+
+- Black box testing: most of our testing followed a black box testing model
+where we took important functions, like our increment burgers based on a bps function,
+and tested it with several different possible scenarios, like incrementing
+with a lower/higher frames/update rate, and for longer/shorter amounts of time
+to make sure that the internal logic of that method functioned appropriately
+without actually looking at its implementation. This also allowed us to
+take a simulation approach — some of our test cases actually are based on 
+simulated states of the game, and what we'd expect particular buys to do
+to the game state. 
+
+- Glass box testing: For some methods, like achievement thresholds, we used a 
+glass-box testing approach where we made sure to test every line of certain 
+pattern matches to make sure that when a user may encounter them. Since these 
+achievement thresholds aren't necessarily told to the player, a glass-box testing 
+approach was required.
+
+We are confident that our testing approach proves the correctness of our system,
+since we thoroughly tested edge cases, and spent hours playtesting/looking for 
+bugs. As always, it's possible there are some minor bugs — they are pretty much
+guaranteed by virtue of writing a coding project. However, we know that our 
+project behaves as expected for just about everything a user can expect to 
+encounter in a typical Burger Clicker playthrough.
+
+
+*)
+
 open OUnit2
 open Helper.Help
 open Helper.Config
@@ -153,32 +194,32 @@ let help_tests =
       { burgers = 0.; bps = 30; click_power = 2 }
       60 1 30;
     test_incr_bur_bps
-      "incrementing 5 sec based on 5 bps with 60 frames per update"
+      "incrementing 5 sec based on 30 bps with 60 frames per update"
       { burgers = 0.; bps = 30; click_power = 2 }
       60 5 150;
     test_incr_bur_bps
-      "incrementing 1 sec based on bps with 60 frames per update"
+      "incrementing 1 sec based on 100 bps with 60 frames per update"
       { burgers = 10000.; bps = 100; click_power = 2 }
       60 1 10100;
-    test_incr_bur_bps "incrementing based on bps with 30 frames per update"
+    test_incr_bur_bps "incrementing based on 100 bps with 30 frames per update"
       { burgers = 10000.; bps = 100; click_power = 2 }
       30 1 10100;
-    test_incr_bur_bps "incrementing based on bps with 10 frames per update"
+    test_incr_bur_bps "incrementing based on 100 bps with 10 frames per update"
       { burgers = 10000.; bps = 100; click_power = 2 }
       10 1 10100;
-    test_incr_bur_bps "incrementing based on bps with 5 frames per update"
+    test_incr_bur_bps "incrementing based on 100 bps with 5 frames per update"
       { burgers = 10000.; bps = 100; click_power = 2 }
       5 1 10100;
     test_incr_bur_bps
-      "incrementing 2 sec based on bps with 30 frames per update"
+      "incrementing 2 sec based on 100 bps with 30 frames per update"
       { burgers = 10000.; bps = 100; click_power = 2 }
       30 2 10200;
     test_incr_bur_bps
-      "incrementing 15 sec based on bps with 5 frames per update"
+      "incrementing 15 sec based on 100 bps with 5 frames per update"
       { burgers = 10000.; bps = 100; click_power = 2 }
       5 15 11500;
     test_incr_bur_bps
-      "incrementing based on bps with 1 frame per update for a minute"
+      "incrementing based on 100 bps with 1 frame per update for a minute"
       { burgers = 10000.; bps = 100; click_power = 2 }
       1 60 16000;
     test_incr_click_pwr "incrementing click power"

@@ -101,7 +101,7 @@ val text_draw : string -> int -> int -> Raylib.Color.t -> int -> unit
   is [color] and the size is [size]*)
 
 val animate_random : unit -> unit
-(** [animate_random] controls the animation of the text that appears when 
+(** [animate_random ()] controls the animation of the text that appears when 
     clicking a random burger. It places the text in the center of the screen 
     and fades in, pauses for one second, and fades out.*)
 
@@ -124,3 +124,6 @@ val increment_item : Config.powerups -> string -> Config.prices -> unit
     [p.spatula] by 1, and update [pr.spatula_price] using [increase_price]*)
 
 val animate_text : Config.animation -> string -> unit
+(**[animate text animation text] takes in an animation type from [Config.animation]
+    as well as some text that should be displayed above the burger, and 
+    handles the logic for animating the text on the screen. *)
