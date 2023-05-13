@@ -1,5 +1,4 @@
 (executable
  (name main)
  (libraries helper ounit2 raylib)
- (public_name Main)
- (instrumentation))
+ (public_name Main))

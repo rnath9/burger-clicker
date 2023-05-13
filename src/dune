@@ -1,6 +1,4 @@
 (library
  (name helper)
  (libraries raylib stdlib)
- (public_name Helper)
- (instrumentation
-  (backend bisect_ppx)))
+ (public_name Helper))

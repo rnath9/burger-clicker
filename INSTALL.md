@@ -15,13 +15,11 @@ For Mac Users:
 
 Paste this line in terminal:
 
-opam install dune graphics camlimages conf-libpng
-
-Then, in the top-level, run the following line:
-  #require "graphics";;
-If graphics does not still work, try the following line:
-  #load "graphics.cma";;
+opam install raylib
 
 After running these lines in the terminal, you should be able to 
 "dune build" the project and type the command "make play" to run
 the game.
+
+For both Mac and Windows, if the program still isn't runnable, you may need to 
+run eval $(opam env) to ensure that you are properly activating the switch.
