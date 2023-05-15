@@ -1,5 +1,4 @@
-
-.PHONY: test check
+.PHONY: test
 
 build:
 	dune build
@@ -18,26 +17,13 @@ test:
 play:
 	OCAMLRUNPARAM=b dune exec bin/main.exe
 
-check:
-	@bash check.sh
-
-bisect: bisect-clean
-	-dune exec --instrument-with bisect_ppx --force test/main.exe
-	bisect-ppx-report html
-
-bisect-clean:
-	rm -rf _coverage bisect*.coverage
-
-finalcheck:
-	@bash check.sh final
-
 zip:
-	rm -f adventure.zip
-	zip -r adventure.zip . -x@exclude.lst
+	rm -f ms3_code.zip
+	zip -r ms3_code.zip . -x@exclude.lst
 
 clean:
 	dune clean
-	rm -f adventure.zip
+	rm -f ms3_code.zip
 
 doc:
 	dune build @doc
