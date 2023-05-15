@@ -23,3 +23,15 @@ the game.
 
 For both Mac and Windows, if the program still isn't runnable, you may need to 
 run eval $(opam env) to ensure that you are properly activating the switch.
+
+If it says you are missing certain packages, for Windows, try:
+  sudo apt-get update
+  sudo apt install pkg-config libxcursor-dev libxi-dev libxinerama-dev libxrandr-dev
+
+or for Mac:
+  brew install pkg-config libxcursor libxi libxinerama libxrandr
+
+If you are still missing certain packages that aren't associated with OCaml, follow
+the installation directions given to you by the terminal output of "opam install raylib"
+(for example, if your terminal output says you need a certain package before reinstalling,
+install that package using sudo apt install or brew install as is appropriate).
